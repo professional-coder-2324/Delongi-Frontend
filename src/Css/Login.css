@@ -1,0 +1,40 @@
+/* SignIn.css */
+.login-container {
+    background: url('../Assets//photo-wide-4.jpg');
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-size: cover;
+    padding: 15px 0;
+}
+
+.auth-logo img {
+    width: 100px;
+    height: 100px;
+}
+
+.login-box {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
+    border: 0;
+}
+@media (max-width: 400px){
+.login-wrap {
+    min-width: 280px;
+}
+}
+@media (max-width: 1024px) and (min-width: 400px) {
+    .login-wrap {
+        min-width: 320px;
+    }
+}
+@media (min-width: 1024px) {
+
+    .login-wrap {
+        min-width: 340px;
+    }
+}
