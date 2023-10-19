@@ -18,7 +18,7 @@ const DatatablePage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/auth/getOneUser",
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/getOneUser`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -32,7 +32,7 @@ const DatatablePage = () => {
       }
       try {
         const response = await axios.get(
-          `http://localhost:4000/api/auth/${
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/${
             user.access === "superadmin" ? "getAllUser" : "getDepartmentUser"
           }`,
           {
@@ -160,14 +160,14 @@ const DatatablePage = () => {
               >
                 <div className="button-container">
                   <FaPlusCircle />
-                  <span>Create</span>
+                  <span onClick={handleShow}>Create</span>
                 </div>
               </button>
             </div>
           </div>
         </div>
-        {/* <button onClick={handleShow}>Create User</button> */}
-        {/* <CreateUserModal show={showModal} handleClose={handleClose} user={user} setRows={setRows} rows ={rows}/> */}
+        {/* <button >Create User</button> */}
+        <CreateUserModal show={showModal} handleClose={handleClose} user={user} setRows={setRows} rows ={rows}/>
       </div>
       <MDBDataTable
         // striped
