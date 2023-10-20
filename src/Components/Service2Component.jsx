@@ -18,7 +18,7 @@ const DatatablePage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/auth/getOneUser`,
+          `http://198.154.112.54/api/auth/getOneUser`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -32,7 +32,7 @@ const DatatablePage = () => {
       }
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/auth/${
+          `http://198.154.112.54/api/auth/${
             user.access === "superadmin" ? "getAllUser" : "getDepartmentUser"
           }`,
           {

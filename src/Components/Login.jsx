@@ -33,7 +33,7 @@ function Login() {
       };
 
       try {
-        const response = await axios.post('http://localhost:4000/api/auth/login', payload);
+        const response = await axios.post('http://198.154.112.54/api/auth/login', payload);
         if (response.data.status === false) {
           Notiflix.Notify.failure('Login Failed!');
         } else {
