@@ -24,7 +24,7 @@ const CreateUserModal = ({ show, handleClose, user,setRows,rows }) => {
             department: selectedOptions.map((role) => role._id), // Extract _id values from selected roles
           };
           try {
-            const response = await axios.post('http://198.154.112.54/api/auth/createUser', userData,{
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/createUser`, userData,{
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
