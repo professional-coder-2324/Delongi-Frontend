@@ -136,12 +136,12 @@ function Navbar({ role }) {
           </ul>
         )}
         {selectedSubTab && (
-        <div className={`tab-content ${isNavOpen ? "shifted" : ""}`}>
+        <div className={`tab-content ${isNavOpen ? window.innerWidth > 768 && "shifted" : ""}`}>
           <div>{selectedSubTab.content}</div>
           </div>
         )}
          {SelectedTabComponent && !services[selectedTab]?.subTabs?.length  && (
-          <div className={`tab-content ${isNavOpen ? "shifted" : ""}`}>
+          <div className={`tab-content ${isNavOpen ?window.innerWidth > 768 && "shifted" : ""}`}>
             <SelectedTabComponent />
           </div>
         )}

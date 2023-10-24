@@ -1,33 +1,210 @@
 .service-component {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .global-search {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 .global-search input {
-    width: 100%;
-    height: 32px;
-    line-height: 1;
-    display: flex;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 6px 12px;
-    color: #606266;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-image: none;
-    background-color: #fff;
-    border: 1px solid #dcdfe6;
-    transition: border-color .2s cubic-bezier(.645,.045,.355,1)
+  width: 100%;
+  height: 32px;
+  line-height: 1;
+  display: flex;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 6px 12px;
+  color: #606266;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-image: none;
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-.global-search-actions .button-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.mdb-datatable-filter {
+  display: none !important;
+}
+.title-user {
+  border-bottom: 1px solid black;
+}
+.service-component button {
+  padding: 8px 20px !important;
+  box-shadow: none !important;
+}
+.filter-button {
+  border: 1px solid #3b82f6 !important;
+  color: #3b82f6 !important;
+  background-color: transparent !important;
+}
+.filter-button:hover {
+  background: #3b82f6 !important;
+  box-shadow: 0 8px 25px -8px #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: white !important;
+}
+.pdf-button {
+  color: #10b981 !important;
+  border: 1px solid #10b981 !important;
+  background-color: transparent !important;
+}
+.pdf-button:hover {
+  background: #10b981 !important;
+  box-shadow: 0 8px 25px -8px #10b981 !important;
+  border-color: #10b981 !important;
+  color: white !important;
+}
+
+.excel-button {
+  color: #ef4444 !important;
+  border: 1px solid #ef4444 !important;
+  background-color: transparent !important;
+}
+.excel-button:hover {
+  background: #ef4444 !important;
+  box-shadow: 0 8px 25px -8px #ef4444 !important;
+  border-color: #ef4444 !important;
+  color: white !important;
+}
+.offboard-user-button {
+  color: black !important;
+  border: 1px solid #f59e0b !important;
+  background-color: #f59e0b !important;
+}
+.onboard-user-button:hover {
+  background: #3b82f6 !important;
+  box-shadow: 0 8px 25px -8px #3b82f6 !important;
+  border-color: #3b82f6 !important;
+  color: white !important;
+}
+.onboard-user-button {
+  color: white !important;
+  border: 1px solid #3b82f6 !important;
+  background-color: #3b82f6 !important;
+}
+.offboard-user-button:hover {
+  background: #f59e0b !important;
+  box-shadow: 0 8px 25px -8px #f59e0b !important;
+  border-color: #f59e0b !important;
+  color: white !important;
+}
+.create-user-button {
+  color: white !important;
+  border: 1px solid black !important;
+  background-color: black !important;
+}
+.create-user-button:hover {
+  background: black !important;
+  box-shadow: 0 8px 25px -8px black !important;
+  border-color: black !important;
+  color: white !important;
+}
+.input-for-user {
+  outline: initial !important;
+  background: #f3f4f6 !important;
+  border: 1px solid #9ca3af !important;
+  color: #111827 !important;
+  padding: 6px 12px !important;
+  font-size: 14px;
+}
+.close-button {
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.edit-button {
+  background: none;
+  font-size: 17px;
+  color: #10b981;
+  border: 1px solid #10b981;
+  padding: 3px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+.edit-button:focus,
+.delete-button:focus {
+  outline: none !important;
+}
+.edit-button i {
+  padding: 3px;
+  border-radius: 5px;
+  border: 1px solid #10b981;
+}
+
+.delete-button {
+  background: none;
+  font-size: 14px;
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  border-radius: 50%;
+  padding: 5px 10px;
+}
+table > tbody tr td:last-child,
+table > thead tr th:last-child {
+  text-align: right;
+  padding-right: 20px;
+}
+
+.delete-user-modal .cancel-user-button {
+  display: inline-block;
+  background-color: #dd3333 !important;
+   border-left-color: #dd3333 ;
+  border-right-color: #dd3333;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  padding: 11px 34px !important;
+  text-transform: capitalize !important;
+}
+.delete-user-modal .delete-modal-title {
+    color: #595959;
+    font-size: 30px;
+    font-weight: 500;
+    text-align: center;
+    text-transform: none;
+    word-wrap: break-word;
+    position: relative;
+    max-width: 100%;
+    padding: 0;
+}
+.delete-user-modal .delete-modal-desc {
+  font-size: 18px;
+  text-align: center;
+  word-wrap: break-word;
+  margin-bottom: 5px;
+}
+.delete-user-modal .delete-user-button {
+  display: inline-block;
+  background-color: #8b5cf6;
+  border-left-color: #8b5cf6;
+  border-right-color: #8b5cf6;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  padding: 11px 34px !important;
+  text-transform: capitalize !important;
+
+}
+.delete-user-modal .modal-content {
+  padding: 20px;
+
+}
+.delete-user-modal .cancel-user-button span,.delete-user-modal .delete-user-button span{
+  font-size: 17px !important;
+}
+@media (min-width: 992px) {
+  .create-user-modal .modal-dialog {
+    max-width: 800px;
+  }
+  .delete-user-modal .modal-dialog {
+    max-width: 512px;
+  }
 }

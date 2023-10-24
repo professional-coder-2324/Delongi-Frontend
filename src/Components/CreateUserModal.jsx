@@ -1,141 +1,311 @@
 import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import Multiselect from "multiselect-react-dropdown";
 import axios from "axios";
+import { useEffect } from "react";
 
-const CreateUserModal = ({ show, handleClose, user,setRows,rows }) => {
-  console.log(user, "userrr");
+const CreateUserModal = ({
+  show,
+  handleClose,
+  user,
+  setRows,
+  row,
+  editData,
+}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [department, setDepartment] = useState("");
+  const [selectedOptions, setSelectedOptions] = useState("");
+  useEffect(() => {
+    console.log(user,editData,"Dsdsds");
+    if (editData) {
+      const editDetails = user?.department?.find((data, index)=>data.roleName == editData.role) 
 
-  const handleCreateUser = async () => {
-    // You can perform any necessary validation here before calling handleCreate
-    // For example, check if required fields are filled.
-    if (firstName && lastName && username && password && department) {
-        const userData = {
-            firstName,
-            lastName,
-            username,
-            password,
-            role:department ,
-            department: selectedOptions.map((role) => role._id), // Extract _id values from selected roles
-          };
-          try {
-            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/createUser`, userData,{
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-            const newUser = response.data.data
-            setRows((prevRows) => [newUser,...prevRows]);
-          } catch (error) {
-            console.log(error, 'Error');
-          }
-          handleClose();
-    } else {
-      // Handle validation errors or display a message.
+      console.log(editDetails,"Sdsdsdsd");
+      setFirstName(editData.firstName);
+      setLastName(editData.lastName);
+      setUsername(editData.username);
+      setPassword(editData.password);
+      setDepartment(editDetails?._id);
+      setSelectedOptions(editData?.department);
     }
-  };
+    else {
+      setFirstName("")
+      setLastName("")
+      setUsername("")
+      setPassword("")
+      setDepartment("");
+      setSelectedOptions("");
+    }
+  }, [editData]);
+  
+  console.log(username,"userrrr");
+  // State variables to hold error messages
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [departmentError, setDepartmentError] = useState("");
+  const [selectedOptionsError, setSelectedOptionsError] = useState("");
+const findRoleName = (roleId) => {
+  console.log(roleId,'roleId');
+  const department = user?.department;
+  const role = department.find((data) => data._id === roleId);
+  return role ? role.roleName : "Role Not Found";
+};
+  const handleCreateUser = async () => {
+    // Reset all error messages
+    setFirstNameError("");
+    setLastNameError("");
+    setUsernameError("");
+    setPasswordError("");
+    setDepartmentError("");
+    setSelectedOptionsError("");
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
+    // Perform your custom validation here
+    let hasError = false;
+
+    if (!firstName) {
+      setFirstNameError("First Name is required");
+      hasError = true;
+    }
+
+    if (!lastName) {
+      setLastNameError("Last Name is required");
+      hasError = true;
+    }
+
+    if (!username) {
+      setUsernameError("Username is required");
+      hasError = true;
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      hasError = true;
+    }
+
+    if (!department) {
+      setDepartmentError("Department is required");
+      hasError = true;
+    }
+
+    if (user.access === "superadmin" && !selectedOptions) {
+      setSelectedOptionsError("Admin Departments are required");
+      hasError = true;
+    }
+
+    if (hasError) {
+      // If there are errors, do not proceed with the form submission
+      return;
+    }
+
+    // Validation passed, proceed with form submission
+    const userData = {
+      firstName,
+      lastName,
+      username,
+      password,
+      role: department,
+      department: user.access === "superadmin"? selectedOptions.map((role) => role._id) : [],
+    };
+
+    try {
+      if(editData) {
+        const response = await axios.put(
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/updateUser?userId=${editData?.id}`,
+          userData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const updatedUser = response.data.data;
+        
+        setRows((prevRows) => {
+          console.log(prevRows,"prevdfdkj");
+          // Create a new array with the updated user, replacing the old user
+          const updatedRows = prevRows.map((row) =>
+            row._id === updatedUser._id ? updatedUser : row
+          );
+          return updatedRows;
+        });
+      }
+      else {
+        const response = await axios.post(
+          `${process.env.REACT_APP_BACKEND_URL}/api/auth/createUser`,
+          userData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        const newUser = response.data.data;
+        const newUserRole = {roleName : findRoleName(newUser.role),_id: newUser.role}
+        console.log(newUserRole,"sdsdfdfdfdf");
+        console.log(newUser,"newUser");
+        const userWithRole = { ...newUser, role:newUserRole };
+          console.log(userWithRole,"SDsdsdsdsddsvcscdvd");
+        // Add the updated user object to the table
+        setRows((prevRows) => [userWithRole, ...prevRows]);
+        
+
+      }
+    } catch (error) {
+      console.log(error, "Error");
+    }
+
+    handleClose();
+  };
 
   const onSelect = (selectedList, selectedItem) => {
-    // Handle the selected item when an option is selected
-    // Update your state or perform other actions as needed
     setSelectedOptions(selectedList);
-};
-console.log("Selected Item:", selectedOptions);
+    setSelectedOptionsError(""); // Clear the error when selection is made
+  };
 
   const onRemove = (selectedList, removedItem) => {
-    // Handle the removed item when an option is deselected
-    console.log("Removed Item:", removedItem);
-    // Update your state or perform other actions as needed
     setSelectedOptions(selectedList);
+    setSelectedOptionsError(""); // Clear the error when a selection is removed
   };
+
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Create User</Modal.Title>
+    <Modal show={show} onHide={handleClose} className="create-user-modal">
+      <Modal.Header>
+        <Modal.Title> {editData ? 'Edit' :"Create"} User</Modal.Title>
+        <button className="btn bg-transparent close-button">
+          <i className="fa-solid text-25 fa-xmark" onClick={handleClose}></i>
+        </button>
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group>
-            <Form.Label>First Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Last Name</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Username</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Department</Form.Label>
-           {user.access !== "user" &&  <Form.Control
-              as="select"
-              value={department}
-              onChange={(e) => setDepartment(e.target.value)}
-            >
-                <option value="">Select Department</option>
-                {
-                user?.department?.map(((data,index)=>(
-                    <option value={data._id} key={index}>{data.roleName}</option>
-                )))
-              }
-            </Form.Control>}
-          </Form.Group>
-          {user.access == "superadmin" && (
-            <Form.Group>
-              <Form.Label>Admin Departments</Form.Label>
-              <Multiselect
-                options={user.department}
-                selectedValues={setSelectedOptions}
-                onSelect={onSelect}
-                onRemove={onRemove}
-                displayValue="roleName"
-                id="css_custom"
-                // style={{ chips: { background: "red" }, searchBox: { border: "none", "border-bottom": "1px solid blue", "border-radius": "0px" } }}
-              />
-            </Form.Group>
-          )}
+          <Row className="mb-2">
+            <Col md={6} sm={12}>
+              <Form.Group>
+                <Form.Label>First Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    setFirstNameError(""); // Clear the error on change
+                  }}
+                  className="input-for-user"
+                />
+                <Form.Text className="text-danger">{firstNameError}</Form.Text>
+              </Form.Group>
+            </Col>
+            <Col md={6} sm={12}>
+              <Form.Group>
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                    setLastNameError(""); // Clear the error on change
+                  }}
+                  className="input-for-user"
+                />
+                <Form.Text className="text-danger">{lastNameError}</Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mb-2">
+            <Col md={6} sm={12}>
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Username"
+                  value={username}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setUsernameError(""); // Clear the error on change
+                  }}
+                  className="input-for-user"
+                  autoComplete="new-username"
+                />
+                <Form.Text className="text-danger">{usernameError}</Form.Text>
+              </Form.Group>
+            </Col>
+            <Col md={6} sm={12}>
+              <Form.Group>
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError(""); // Clear the error on change
+                  }}
+                  className="input-for-user"
+                  autoComplete="new-password"
+                />
+                <Form.Text className="text-danger">{passwordError}</Form.Text>
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="mb-2">
+            <Col md={6} sm={12}>
+              <Form.Group>
+                <Form.Label>Department</Form.Label>
+                <Form.Control
+                  as="select"
+                  defaultValue={department}
+                  value={department}
+                  onChange={(e) => {
+                    setDepartment(e.target.value);
+                    setDepartmentError(""); // Clear the error on change
+                  }}
+                >
+                  <option value="">Select Department</option>
+                  {user?.department?.map((data, index) => (
+                    <option value={data._id} key={index}>
+                      {data.roleName}
+                    </option>
+                  ))}
+                </Form.Control>
+                <Form.Text className="text-danger">{departmentError}</Form.Text>
+              </Form.Group>
+            </Col>
+            <Col md={6} sm={12}>
+              {user.access === "superadmin" && (
+                <Form.Group>
+                  <Form.Label>Admin Departments</Form.Label>
+                  <Multiselect
+                    options={user.department}
+                    selectedValues={selectedOptions}
+                    onSelect={onSelect}
+                    onRemove={onRemove}
+                    displayValue="roleName"
+                    id="css_custom"
+                  />
+                  <Form.Text className="text-danger">
+                    {selectedOptionsError}
+                  </Form.Text>
+                </Form.Group>
+              )}
+            </Col>
+          </Row>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={handleCreateUser}>
-          Create User
-        </Button>
+      <Modal.Footer className="d-flex justify-content-start">
+        <button
+          type="button"
+          className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+          onClick={handleCreateUser}
+        >
+          <div className="button-container">
+            <span>Submit</span>
+          </div>
+        </button>
       </Modal.Footer>
     </Modal>
   );
