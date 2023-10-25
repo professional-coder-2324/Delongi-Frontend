@@ -50,7 +50,7 @@ const DatatablePage = () => {
       try {
         if (user.access === "superadmin") {
           const response = await axios.get(
-            `http://localhost:4000/api/auth/getAllUser`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/auth/getAllUser`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -61,7 +61,7 @@ const DatatablePage = () => {
         }
         if (user.access === "admin") {
           const response = await axios.get(
-            `http://localhost:4000/api/auth/getDepartmentUser`,
+            `${process.env.REACT_APP_BACKEND_URL}/api/auth/getDepartmentUser`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
