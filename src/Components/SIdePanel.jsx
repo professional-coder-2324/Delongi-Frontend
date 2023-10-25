@@ -58,6 +58,7 @@ import React, { useState } from "react";
 import Service1Component from "./Service1Component";
 import Service2Component from "./Service2Component";
 import servicesData from "../Data/test";
+import NewOrders from "./NewOrders";
 // Import other service components
 
 function Navbar({ role }) {
@@ -78,7 +79,8 @@ function Navbar({ role }) {
 
   const serviceComponents = {
     Service1: Service1Component,
-    Service2: Service2Component,
+    User: Service2Component,
+    "New Orders": NewOrders
     // Add other service components
   };
 

@@ -1,97 +1,101 @@
 const servicesData = {
   superadmin: {
-    Service1: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-      subTabs: [
-        { label: 'SubTab1', content: 'Content for SubTab1' },
-        { label: 'SubTab2', content: 'Content for SubTab2' },
-        // Add more sub-tabs as needed
-      ],
-    },
-    Service2: {
+    // Service1: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    //   subTabs: [
+    //     { label: 'SubTab1', content: 'Content for SubTab1' },
+    //     { label: 'SubTab2', content: 'Content for SubTab2' },
+    //     // Add more sub-tabs as needed
+    //   ],
+    // },
+    User: {
       icon: 'fa-people-arrows',
       isEnabled: false,
     },
-    Service3: {
-      icon: 'fa-gear',
-      isEnabled: true,
-    },
-    Service4: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-    },
-    Service5: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-    },
-    Service6: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service7: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service8: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-    },
-    Service9: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-    },
-    Service10: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    }
+    // Service3: {
+    //   icon: 'fa-gear',
+    //   isEnabled: true,
+    // },
+    // Service4: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // },
+    // Service5: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // },
+    // Service6: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: false,
+    // },
+    // Service7: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: false,
+    // },
+    // Service8: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // },
+    // Service9: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // },
+    // Service10: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: false,
+    // }
   },
   admin: {
-    Service1: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-      subTabs: [
-        { label: 'SubTab1', content: 'Content for SubTab1' },
-        { label: 'SubTab2', content: 'Content for SubTab2' },
-        // Add more sub-tabs as needed
-      ],
-    },
-    Service2: {
+    User: {
       icon: 'fa-people-arrows',
       isEnabled: true,
     },
-    Service3: {
+    "New Orders": {
+      icon: 'fa-ticket',
+      isEnabled: true,
+      // subTabs: [
+      //   { label: 'SubTab1', content: 'Content for SubTab1' },
+      //   { label: 'SubTab2', content: 'Content for SubTab2' },
+      //   // Add more sub-tabs as needed
+      // ],
+    },
+    OrderStatus: {
+      icon: 'fa-people-arrows',
+      isEnabled: true,
+    },
+    ReleasedOrder: {
       icon: 'fa-gear',
       isEnabled: true,
     },
-    Service4: {
+    UnreleasedOrders: {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    Service5: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service6: {
+    DataFiles: {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    Service7: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service8: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service9: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-    },
-    Service10: {
-      icon: 'fa-ticket',
-      isEnabled: true,
-    }
+    // Service6: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // },
+    // Service7: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: false,
+    // },
+    // Service8: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: false,
+    // },
+    // Service9: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // },
+    // Service10: {
+    //   icon: 'fa-ticket',
+    //   isEnabled: true,
+    // }
   },
   user: {
     Service1: {
