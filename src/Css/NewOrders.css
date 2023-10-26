@@ -44,7 +44,7 @@
     border: 1px solid #9CA3AF;
     color: #111827;
 }
-.case-number-modal .modal-body input.form-control:focus ,.new-order-modal .modal-body input.form-control:focus {
+.case-number-modal .modal-body input.form-control:focus ,.new-order-modal .modal-body input.form-control:focus,.new-order-modal .modal-body textarea.form-control:focus {
     box-shadow: none !important;
     background: white !important;
 }

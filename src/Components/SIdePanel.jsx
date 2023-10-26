@@ -80,7 +80,11 @@ function Navbar({ role }) {
   const serviceComponents = {
     Service1: Service1Component,
     User: Service2Component,
-    "New Orders": NewOrders
+    "New Orders": NewOrders,
+    "Order Status":"",
+    "Released Order":"",
+    "Unreleased Orders":"",
+    "Data Files":"" 
     // Add other service components
   };
 

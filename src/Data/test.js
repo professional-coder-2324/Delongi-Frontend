@@ -60,19 +60,19 @@ const servicesData = {
       //   // Add more sub-tabs as needed
       // ],
     },
-    OrderStatus: {
+    "Order Status": {
       icon: 'fa-people-arrows',
       isEnabled: true,
     },
-    ReleasedOrder: {
+    "Released Order": {
       icon: 'fa-gear',
       isEnabled: true,
     },
-    UnreleasedOrders: {
+    "Unreleased Orders": {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    DataFiles: {
+    "Data Files": {
       icon: 'fa-ticket',
       isEnabled: true,
     },

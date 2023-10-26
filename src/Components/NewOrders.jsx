@@ -133,7 +133,7 @@ const NewOrders = () => {
             onClick={handleCaseNumberSubmit}
           >
             <div className="button-container">
-              <span>Submit</span>
+              <span>Next</span>
             </div>
           </button>
         </Modal.Footer>
