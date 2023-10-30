@@ -1,53 +1,24 @@
 const servicesData = {
-  superadmin: {
-    // Service1: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    //   subTabs: [
-    //     { label: 'SubTab1', content: 'Content for SubTab1' },
-    //     { label: 'SubTab2', content: 'Content for SubTab2' },
-    //     // Add more sub-tabs as needed
-    //   ],
-    // },
-    User: {
-      icon: 'fa-people-arrows',
-      isEnabled: false,
+  SuperAdmin: {
+    "Onboard/Offboard": {
+      icon: 'fa-ticket',
+      isEnabled: true,
     },
-    // Service3: {
-    //   icon: 'fa-gear',
-    //   isEnabled: true,
-    // },
-    // Service4: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // },
-    // Service5: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // },
-    // Service6: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: false,
-    // },
-    // Service7: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: false,
-    // },
-    // Service8: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // },
-    // Service9: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // },
-    // Service10: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: false,
-    // }
+    Logs: {
+      icon: 'fa-people-arrows',
+      isEnabled: true,
+    },
+    People: {
+      icon: 'fa-user',
+      isEnabled: true,
+    },
+    Settings: {
+      icon: 'fa-people-arrows',
+      isEnabled: true,
+    },
   },
-  admin: {
-    User: {
+  callCenter: {
+    Users: {
       icon: 'fa-people-arrows',
       isEnabled: true,
     },
@@ -76,69 +47,53 @@ const servicesData = {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    // Service6: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // },
-    // Service7: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: false,
-    // },
-    // Service8: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: false,
-    // },
-    // Service9: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // },
-    // Service10: {
-    //   icon: 'fa-ticket',
-    //   isEnabled: true,
-    // }
   },
-  user: {
-    Service1: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service2: {
+  ACS:{
+    "Box Shipments": {
       icon: 'fa-people-arrows',
       isEnabled: true,
     },
-    Service3: {
+    "Receiving": {
+      icon: 'fa-ticket',
+      isEnabled: true,
+      // subTabs: [
+      //   { label: 'SubTab1', content: 'Content for SubTab1' },
+      //   { label: 'SubTab2', content: 'Content for SubTab2' },
+      //   // Add more sub-tabs as needed
+      // ],
+    },
+    "Repairs": {
+      icon: 'fa-people-arrows',
+      isEnabled: true,
+    },
+    "Machine Shipmentsr": {
       icon: 'fa-gear',
       isEnabled: true,
     },
-    Service4: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service5: {
-      icon: 'fa-ticket',
-      isEnabled: false,
-    },
-    Service6: {
+    "Refurbishment": {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    Service7: {
+    "Fed ExMenu": {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    Service8: {
+    "Part Management": {
       icon: 'fa-ticket',
       isEnabled: true,
     },
-    Service9: {
+    "Case Status": {
       icon: 'fa-ticket',
-      isEnabled: false,
+      isEnabled: true,
     },
-    Service10: {
+    "Reports": {
       icon: 'fa-ticket',
-      isEnabled: false,
-    }
+      isEnabled: true,
+    },
   },
+  Administration:{
+
+  }
 };
 
 export default servicesData;

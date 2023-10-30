@@ -59,14 +59,85 @@ import Service1Component from "./Service1Component";
 import Service2Component from "./Service2Component";
 import servicesData from "../Data/test";
 import NewOrders from "./NewOrders";
+import { useEffect } from "react";
+import { useRef } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import OrderStatus from "./OrderStatus";
+import ReleasedOrders from "./ReleasedOrders";
+import DataFiles from "./DataFiles";
+import OnAndOffBoard from "./OnAndOffBoard";
+import UnReleasedOrders from "./UnreleasedOrders";
+import Logs from "./Logs";
+import Settings from "./Settings";
+import BoxShipments from "./BoxShipment";
 // Import other service components
+export const tabData = {
+  callCenter: {
+    users:true,
+    newOrder: true,
+    orderStatus: true,
+    releasedOrder: true,
+    unreleasedOrders: true,
+    dataFiles: true,
+    search: false,
+  },
+  administration: {
+    search: false,
+  },
+  ACS: {
+    logs: true,
+    reports: false,
+    caseStatus: false,
+    partManagement: false,
+    fedExMenu: false,
+    refurbishment: false,
+    machineShipments: false,
+    repairs: false,
+    receiving: false,
+    boxShipments: true,
+    search: false,
+  },
+};
 
-function Navbar({ role }) {
+const tabDisplayNames = {
+  reasonCodes: "Reason Codes",
+  repairCode: "Repair Code",
+  defectCodes: "Defect Codes",
+  users: "Users",
+  dataFiles: "Data Files",
+  logs: "Logs",
+  zipCodes: "ZIP Codes",
+  model_Brand: "Model Brand",
+  model: "Model",
+  retailName: "Retail Name",
+  shipper: "Shipper",
+  receiver: "Receiver",
+  technician: "Technician",
+  newOrder: "New Orders",
+  orderStatus: "Order Status",
+  releasedOrder: "Released Orders",
+  unreleasedOrders: "Unreleased Orders",
+  search: "Search",
+  reports: "Reports",
+  caseStatus: "Case Status",
+  partManagement: "Part Management",
+  fedExMenu: "FedEx Menu",
+  refurbishment: "Refurbishment",
+  machineShipments: "Machine Shipments",
+  repairs: "Repairs",
+  receiving: "Receiving",
+  boxShipments: "Box Shipments",
+};
+function Navbar({ user, isNavOpen, setIsNavOpen }) {
+  const role = user.role.roleName;
+  console.log("rowelwedw", role);
   const services = servicesData[role];
-  const [isNavOpen, setIsNavOpen] = useState(true);
+ 
   const [selectedTab, setSelectedTab] = useState(null);
   const [selectedSubTab, setSelectedSubTab] = useState(null);
+  const [tabKey, setTabKey] = useState(0);
 
+  const navigate = useNavigate()
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
@@ -75,85 +146,157 @@ function Navbar({ role }) {
     setSelectedTab(tabName);
   };
 
-
-
   const serviceComponents = {
     Service1: Service1Component,
-    User: Service2Component,
+    People: Service2Component,
+    Users:Service2Component,
     "New Orders": NewOrders,
-    "Order Status":"",
-    "Released Order":"",
-    "Unreleased Orders":"",
-    "Data Files":"" 
+    "Order Status":OrderStatus,
+    "Released Order":ReleasedOrders,
+    "Unreleased Orders":UnReleasedOrders,
+    "Data Files": DataFiles,
+    "Onboard/Offboard":OnAndOffBoard,
+    "Logs": Logs,
+    "Settings": Settings,
+    "Box Shipments":BoxShipments
     // Add other service components
   };
 
-  const handleServiceClick = (serviceName) => {
-    if (selectedTab === serviceName) {
-      setSelectedTab(null);
-    } else {
-      setSelectedTab(serviceName);
+  const handleServiceClick = (tabName) => {
+    switch (tabName) {
+      case 'newOrder':
+        navigate('/new');
+        break;
+      case 'orderStatus':
+        navigate('/order-status');
+        break;
+      // Add cases for other tab routes
+      default:
+        break;
     }
-    setSelectedSubTab(null); // Reset the selected sub-tab
-  };
+    console.log(selectedTab,"sdffdfdfdf");
+      // if (selectedTab === serviceName) {
+      //   setTabKey((prevKey) => prevKey + 1)
+      // } else {
+      //   setSelectedTab(serviceName);
+      // }
+      // setSelectedSubTab(null); // Reset the selected sub-tab
+    };
 
   const handleSubTabClick = (subTab) => {
     setSelectedSubTab(subTab);
   };
   const SelectedTabComponent = serviceComponents[selectedTab];
   const SelectedSubTabComponent = serviceComponents[selectedSubTab];
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const toggleSetting = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  useEffect(() => {
+    const closeDropdown = (event) => {
+      if (isDropdownOpen && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("click", closeDropdown);
+    } else {
+      document.removeEventListener("click", closeDropdown);
+    }
+
+    return () => {
+      document.removeEventListener("click", closeDropdown);
+    };
+  }, [isDropdownOpen]);
+  const handleLogout =()=>{
+    localStorage.removeItem("token");
+    window.location.reload()
+    // navigate("/login")
+  }
+  const renderTabs = () => {
+    const tabs = [];
+    Object.entries(tabData).forEach(([category, categoryData]) => {
+      Object.entries(categoryData).forEach(([tabName, tabValue]) => {
+        if (tabValue) {
+          tabs.push(
+            <>
+             <li
+                  key={tabName}
+                  onClick={() => navigate(tabName)}
+                  className={selectedTab === tabName ? "active" : ""}
+                >
+                  <i
+                    className={`fa fa-people-arrows`}
+                    aria-hidden="true"
+                  ></i>
+                 {tabDisplayNames[tabName]}
+                </li>
+            {/* <div
+              key={tabName}
+              onClick={() => navigate(tabName)}
+              className={selectedTab === tabName ? "active" : ""}
+              >
+              {tabName}
+            </div> */}
+              </>
+          );
+        }
+      });
+    });
+    return tabs;
+  };
 
   return (
     <div className="navbar-container">
-    <div className="top-nav">
-      <button onClick={toggleNav} className="nav-toggle-button">
-      <i class="fa-solid fa-bars" style={{color:"black"}}></i>  
-      </button>
-    </div>
-    <div className="main-content">
-      <div className={`navbar ${isNavOpen ? "open" : ""}`}>
-        <ul>
-          {Object.entries(services).map(([serviceName, serviceData]) => (
-            serviceData.isEnabled && (
-              <li
-                key={serviceName}
-                onClick={() => handleServiceClick(serviceName)}
-                className={selectedTab === serviceName ? "active" : ""}
-              >
-                <i className={`fa ${serviceData.icon}`} aria-hidden="true"></i>
-                {serviceName}
-              </li>
-            )
-          ))}
-        </ul>
+      <div className="top-nav">
+        <button onClick={toggleNav} className="nav-toggle-button">
+          <i class="fa-solid fa-bars" style={{ color: "black" }}></i>
+        </button>
+        <div className="dropbtn" ref={dropdownRef}  onClick={toggleSetting}>
+          <i
+            className="fa-solid fa-cog"
+            style={{ color: "black", cursor: "pointer" }}
+          ></i>
+         {isDropdownOpen && (
+          <div className="dropdown-content" id="myDropdown">
+            <div class="dropdown-header"><i class="fa-solid fa-user-plus"></i><span className="text-capitalize">{ user?.firstName + " "+ user?.lastName  }</span></div>
+            <a href="" class="dropdown-item">Profile</a>
+            <a href="" class="dropdown-item">Settings</a>
+            <a href="" class="dropdown-item" onClick={handleLogout}>Logout</a>
+          </div>
+        )}
+        </div>
       </div>
-      {/* <div className="tab-content"> */}
-        {selectedTab && !selectedSubTab &&services[selectedTab]?.subTabs?.length && (
-          <ul className="tab-content-subtabs">
-            {services[selectedTab]?.subTabs?.map((subTab) => (
-              <li
-                key={subTab.label}
-                onClick={() => handleSubTabClick(subTab)}
-                className={selectedSubTab === subTab ? "active" : ""}
-              >
-                {subTab.label}
-              </li>
-            ))}
+      <div className="main-content">
+        <div className={`navbar ${isNavOpen ? "open" : ""}`}>
+          <ul>
+            {/* {renderTabs()} */}
+            {Object.entries(tabData[role]).map(([category, categoryData]) =>
+              categoryData && (
+                <li
+                  key={category}
+                  onClick={() => navigate(category)}
+                  className={selectedTab === category ? "active" : ""}
+                >
+                  <i
+                    className={`fa fa-people-arrows`}
+                    aria-hidden="true"
+                  ></i>
+                 {tabDisplayNames[category] || category}
+                </li>
+              )
+            
+            )}
+            
           </ul>
-        )}
-        {selectedSubTab && (
-        <div className={`tab-content ${isNavOpen ? window.innerWidth > 768 && "shifted" : ""}`}>
-          <div>{selectedSubTab.content}</div>
-          </div>
-        )}
-         {SelectedTabComponent && !services[selectedTab]?.subTabs?.length  && (
-          <div className={`tab-content ${isNavOpen ?window.innerWidth > 768 && "shifted" : ""}`}>
-            <SelectedTabComponent />
-          </div>
-        )}
-      {/* </div> */}
+        </div>
+
+      </div>
     </div>
-  </div>
   );
 }
 

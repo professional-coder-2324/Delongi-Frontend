@@ -1,0 +1,44 @@
+.detail-button {
+    background: none;
+    font-size: 17px;
+    color: #10b981;
+    border: none;
+    padding: 3px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+.detail-button svg {
+    width: 25px;
+    fill: #10b981;
+    padding: 3px;
+}
+.detail-button:focus {
+    outline: none;
+}
+
+.spinner-container-component {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:  calc( 100vh - 150px);
+  }
+  
+  .spinner-component {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid rgba(121, 121, 121, 0.45);
+    position: absolute;
+    left: calc(50% - 25px);
+    top: calc(50% - 45px);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border-top-color: #000000;
+    animation: loader 1s ease-in-out infinite;
+    -webkit-animation: loader 1s ease-in-out infinite;
+  }
+  @keyframes loader {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

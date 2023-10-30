@@ -152,6 +152,10 @@ table > thead tr th:last-child {
   text-align: right;
   padding-right: 20px;
 }
+table > tbody tr td:first-child,
+table > thead tr th:first-child {
+  text-align: inherit;
+}
 
 .delete-user-modal .cancel-user-button {
   display: inline-block;

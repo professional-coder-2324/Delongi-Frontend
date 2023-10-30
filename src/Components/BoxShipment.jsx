@@ -7,7 +7,7 @@ import Logo from "../Assets/logo.png";
 import NewOrders, { SecondModal, ThirdModal } from "./NewOrders";
 import { useNavigate } from "react-router-dom";
 
-const UnReleasedOrders = () => {
+const BoxShipments = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
@@ -30,7 +30,7 @@ const UnReleasedOrders = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getAllUnReleasedOrders`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getAllReleasedOrders`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -175,7 +175,7 @@ const UnReleasedOrders = () => {
         
           <>
             <div>
-              <h2 className="pb-2 title-user">UnReleased Orders</h2>
+              <h2 className="pb-2 title-user">Order Status</h2>
               {/* ... Your search and filter buttons ... */}
               <div class="service-component">
                 <div class="global-search mt-4 mb-3">
@@ -204,4 +204,4 @@ const UnReleasedOrders = () => {
   );
 };
 
-export default UnReleasedOrders;
+export default BoxShipments;
