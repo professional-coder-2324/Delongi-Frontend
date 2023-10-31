@@ -141,6 +141,12 @@ function App() {
                     element={<OrderStatusDetails />}
                   />
                 )}
+                 {route.path == "boxShipments" && (
+                  <Route
+                    path="/boxShipments/:id"
+                    element={<OrderStatusDetails path="boxShipments" />}
+                  />
+                )}
               </>
             ))}
 

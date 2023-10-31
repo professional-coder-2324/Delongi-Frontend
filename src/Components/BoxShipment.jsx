@@ -3,8 +3,6 @@ import { MDBDataTable } from "mdbreact";
 import "../Css/CallCenter.css";
 import "mdbreact/dist/css/mdb.css";
 import axios from "axios";
-import Logo from "../Assets/logo.png";
-import NewOrders, { SecondModal, ThirdModal } from "./NewOrders";
 import { useNavigate } from "react-router-dom";
 
 const BoxShipments = () => {
@@ -125,7 +123,7 @@ const BoxShipments = () => {
           <button
             className="detail-button"
             onClick={() => {
-              navigate(`/orderStatus/${userData.id}`)
+              navigate(`/boxShipments/${userData.id}`)
             }}
           >
             <a class="" title="detail">
@@ -175,7 +173,7 @@ const BoxShipments = () => {
         
           <>
             <div>
-              <h2 className="pb-2 title-user">Order Status</h2>
+              <h2 className="pb-2 title-user">Box Shipments</h2>
               {/* ... Your search and filter buttons ... */}
               <div class="service-component">
                 <div class="global-search mt-4 mb-3">

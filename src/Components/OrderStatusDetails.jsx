@@ -7,9 +7,9 @@ import Logo from "../Assets/logo.png";
 import NewOrders, { SecondModal, ThirdModal } from "./NewOrders";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "./ModalContext";
-import { Modal } from "react-bootstrap";
+import { Col, Form, Modal, Row } from "react-bootstrap";
 
-const OrderStatusDetails = () => {
+const OrderStatusDetails = ({path}) => {
   const [orderData, setOrderData] = useState({});
   const [loading, setLoading] = useState(false);
   const {id} = useParams()
@@ -17,7 +17,10 @@ const OrderStatusDetails = () => {
   const { openNewOrdersModal, showNewOrdersModal} = useModal();
   const [showReleased,setShowRealeased] = useState(false)
   const [showCancel,setShowCancel] = useState(false)
+  const [BoxShipmentModal, setBoxShipmentModal] = useState(false)
+  const [BoxShipmenConfirmation, setBoxShipmenConfirmation] = useState(false)
   const [models] = useState(["Select Model", "Model A", "Model B", "Model C"]);
+  const [shipper,setShipper] = useState("")
   const [retailerNames] = useState([
     "Select Retailer Name",
     "Retailer 1",
@@ -29,6 +32,12 @@ const OrderStatusDetails = () => {
     "Reason Code 1",
     "Reason Code 2",
     "Reason Code 3",
+  ]);
+  const [shipperName] = useState([
+    "Select Shipper Name",
+    "Shipper 1",
+    "Shipper 2",
+    "Shipper 3",
   ]);
   console.log("idddd", orderData);
 
@@ -69,7 +78,7 @@ const OrderStatusDetails = () => {
         );
         setOrderData(response.data.data);
         setLoading(false);
-        navigate('/orderStatus')
+        navigate(`${path=="boxShipments" ? "/boxShipments" :"/orderStatus"}`)
       } catch (error) {
         setLoading(false);
         console.log(error, "Error");
@@ -85,6 +94,14 @@ const OrderStatusDetails = () => {
       )}
       {!loading && (
         <div>
+           <button className="btn bg-transparent close-button">
+            <i
+             class="fa-solid fa-arrow-left"
+              onClick={() => {
+                navigate(`${path=="boxShipments" ? "/boxShipments" :"/orderStatus"}`)
+              }}
+            ></i>
+          </button>
           <SecondModal formData={orderData} disabled={true} />
           <ThirdModal
             formData={orderData}
@@ -146,6 +163,43 @@ const OrderStatusDetails = () => {
               </a>
             </div>
           </div>}
+          {path == "boxShipments" && <div className="d-flex mt-4">
+            <div className="new-order-box" onClick={()=>navigate('/boxShipments')}>
+              <a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 29.09 32.89"
+                  class="nav-icon"
+                >
+                  <path
+                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                    class="cls-1"
+                  ></path>
+                </svg>
+                <span class="nav-text">
+                  Exit Without <br /> Updating
+                </span>
+              </a>
+            </div>
+            <div className="new-order-box" onClick={() => setBoxShipmentModal(true)}>
+              <a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 29.09 32.89"
+                  class="nav-icon"
+                >
+                  <path
+                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                    class="cls-1"
+                  ></path>
+                </svg>
+                <span class="nav-text">
+                  Process <br /> Shipment Details
+                </span>
+              </a>
+            </div>
+          </div>}
+
         </div>
 
       )}
@@ -189,6 +243,64 @@ const OrderStatusDetails = () => {
         </Modal.Body>
       </Modal>
       <Modal
+        show={BoxShipmentModal}
+        onHide={() => setBoxShipmentModal(false)}
+        className="confirm-status-modal"
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>
+          <Modal.Title>Shipment Confirmation</Modal.Title>
+          <button className="btn bg-transparent close-button">
+            <i
+              className="fa-solid text-25 fa-xmark"
+              onClick={() => {
+                setBoxShipmentModal(false);
+              }}
+            ></i>
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+        <div className="text-center">
+            <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
+              Case Number
+            </Form.Label>
+            <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
+              {orderData?.caseNumber}
+            </p>
+          </div>
+          <Row className="my-3">
+        <Col>
+          <Form.Group>
+            <Form.Label>Shipper</Form.Label>
+            <Form.Control
+              as="select"
+              value={shipper}
+              onChange={(e) =>
+                setShipper(e.target.value)
+              }
+            >
+              {shipperName.map((name, index) => (
+                <option value={name} key={index}>
+                  {name}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+        </Col>
+      </Row>
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() =>{setBoxShipmentModal(false);setBoxShipmenConfirmation(true)}}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>Confirm</span>
+            </div>
+          </button>
+        </Modal.Body>
+      </Modal>
+      <Modal
         show={showReleased}
         onHide={() => setShowRealeased(false)}
         className="confirm-status-modal"
@@ -220,7 +332,48 @@ const OrderStatusDetails = () => {
             </div>
           </button>
         </Modal.Body>
-      </Modal>
+        </Modal>
+        <Modal
+        show={BoxShipmenConfirmation}
+        onHide={() => setBoxShipmenConfirmation(false)}
+        className="confirm-status-modal"
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>
+          <Modal.Title>Updated Notice</Modal.Title>
+          <button className="btn bg-transparent close-button">
+            <i
+              className="fa-solid text-25 fa-xmark"
+              onClick={() => {
+                setBoxShipmenConfirmation(false);
+              }}
+            ></i>
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+        <div className="text-center">
+            <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
+              Case Number
+            </Form.Label>
+            <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
+              {orderData?.caseNumber}
+            </p>
+          </div>
+          <p style={{ textAlign: "left", fontSize: 18, fontWeight: 400, textTransform:"uppercase",margin:"15px 0" }}>
+            Activity Status has been updated for this order
+          </p>
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() => {handleStatusSubmit("boxShipped");setBoxShipmenConfirmation(false);}}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>Confirm</span>
+            </div>
+          </button>
+        </Modal.Body>
+        </Modal>
     </>
   );
 };
