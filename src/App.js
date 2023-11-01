@@ -27,6 +27,8 @@ import DataFiles from "./Components/DataFiles";
 import Logs from "./Components/Logs";
 import OrderStatusDetails from "./Components/OrderStatusDetails";
 import BoxShipments from "./Components/BoxShipment";
+import Receiving from "./Components/Receiving";
+import ReceivingList from "./Components/ReceivingList";
 const isAuthenticated = !!localStorage.getItem("token");
 
 function App() {
@@ -72,7 +74,8 @@ function App() {
       boxShipments:BoxShipments,
       // "Onboard/Offboard":OnAndOffBoard,
       logs: Logs,
-
+      receiving: Receiving,
+      receivingList: ReceivingList,
       // Define other mappings as needed
     }[routeName];
   }
@@ -145,6 +148,12 @@ function App() {
                   <Route
                     path="/boxShipments/:id"
                     element={<OrderStatusDetails path="boxShipments" />}
+                  />
+                )}
+                 {route.path == "receiving" && (
+                  <Route
+                    path="/receiving/:id"
+                    element={<OrderStatusDetails path="receiving" />}
                   />
                 )}
               </>

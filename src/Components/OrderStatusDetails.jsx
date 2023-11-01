@@ -9,18 +9,22 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "./ModalContext";
 import { Col, Form, Modal, Row } from "react-bootstrap";
 
-const OrderStatusDetails = ({path}) => {
+const OrderStatusDetails = ({ path }) => {
   const [orderData, setOrderData] = useState({});
   const [loading, setLoading] = useState(false);
-  const {id} = useParams()
-  const navigate = useNavigate()
-  const { openNewOrdersModal, showNewOrdersModal} = useModal();
-  const [showReleased,setShowRealeased] = useState(false)
-  const [showCancel,setShowCancel] = useState(false)
-  const [BoxShipmentModal, setBoxShipmentModal] = useState(false)
-  const [BoxShipmenConfirmation, setBoxShipmenConfirmation] = useState(false)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { openNewOrdersModal, showNewOrdersModal } = useModal();
+  const [showReleased, setShowRealeased] = useState(false);
+  const [showCancel, setShowCancel] = useState(false);
+  const [BoxShipmentModal, setBoxShipmentModal] = useState(false);
+  const [ReceivingModal, setReceivingModal] = useState(false);
+  const [BoxShipmenConfirmation, setBoxShipmenConfirmation] = useState(false);
   const [models] = useState(["Select Model", "Model A", "Model B", "Model C"]);
-  const [shipper,setShipper] = useState("")
+  const [shipper, setShipper] = useState("");
+  const [receiver, setReceiver] = useState("");
+  const [serialNumber, setSerialNumber] = useState("");
+  const [modal, setModal] = useState("");
   const [retailerNames] = useState([
     "Select Retailer Name",
     "Retailer 1",
@@ -39,6 +43,13 @@ const OrderStatusDetails = ({path}) => {
     "Shipper 2",
     "Shipper 3",
   ]);
+  const [receiverName] = useState([
+    "Select Receiver Name",
+    "Receiver 1",
+    "Receiver 2",
+    "Receiver 3",
+  ]);
+  const [modals] = useState(["Select Modal", "Modal 1", "Modal 2", "Modal 3"]);
   console.log("idddd", orderData);
 
   useEffect(() => {
@@ -63,27 +74,62 @@ const OrderStatusDetails = ({path}) => {
     fetchData();
   }, []);
 
-  const handleStatusSubmit =async (status)=>{
+  const handleStatusSubmit = async (status) => {
     try {
-        const response = await axios.put(
-          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateOrderStatus`,{
-            orderId:id,
-            status:status
+      const response = await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateOrderStatus`,
+        {
+          orderId: id,
+          status: status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+        }
+      );
+      setOrderData(response.data.data);
+      setLoading(false);
+      navigate(`${path == "boxShipments" ? "/boxShipments" : "/orderStatus"}`);
+    } catch (error) {
+      setLoading(false);
+      console.log(error, "Error");
+    }
+  };
+  const handleReceived = async (type) => {
+    const data =
+      type == "received"
+        ? {
+            orderId: id,
+            status: "received",
+            receiver: receiver,
+            serialNumber: serialNumber,
+            model: modal,
           }
-        );
-        setOrderData(response.data.data);
-        setLoading(false);
-        navigate(`${path=="boxShipments" ? "/boxShipments" :"/orderStatus"}`)
-      } catch (error) {
-        setLoading(false);
-        console.log(error, "Error");
-      }
-  }
+        : {
+            orderId: id,
+            status: "boxshipped",
+            shiperName: shipper,
+          };
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/${type == "received"?"updateReceivedOrders": "updateBoxshipment"}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setOrderData(response.data.data);
+      setLoading(false);
+      // navigate(`${path.length > 0 ? path : "/orderStatus"}`);
+    } catch (error) {
+      setLoading(false);
+      console.log(error, "Error");
+    }
+  };
+  console.log(path,"Fsfffsdf");
 
   return (
     <>
@@ -94,14 +140,24 @@ const OrderStatusDetails = ({path}) => {
       )}
       {!loading && (
         <div>
-           <button className="btn bg-transparent close-button">
+          <button className="btn bg-transparent back-button d-flex align-items-center" style={{fontSize:16, fontWeight:500,gap:8, margin:"15px 0 "}} onClick={() => {
+                navigate(-1);
+              }}>
             <i
-             class="fa-solid fa-arrow-left"
-              onClick={() => {
-                navigate(`${path=="boxShipments" ? "/boxShipments" :"/orderStatus"}`)
-              }}
+              class="fa-solid fa-chevron-left"
+              
+              style={{marginBottom:2}}
             ></i>
+            Back
           </button>
+          <div className="text-center">
+            <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
+              Case Number
+            </Form.Label>
+            <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 20 }}>
+              {orderData?.caseNumber}
+            </p>
+          </div>
           <SecondModal formData={orderData} disabled={true} />
           <ThirdModal
             formData={orderData}
@@ -110,104 +166,162 @@ const OrderStatusDetails = ({path}) => {
             retailerNames={retailerNames}
             reasonCodes={reasonCodes}
           />
-         {orderData.status == "unreleased" && <div className="d-flex mt-4">
-            <div className="new-order-box" onClick={()=>setShowCancel(true)}>
-              <a>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 29.09 32.89"
-                  class="nav-icon"
-                >
-                  <path
-                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
-                    class="cls-1"
-                  ></path>
-                </svg>
-                <span class="nav-text">
-                  Cancel <br /> Order
-                </span>
-              </a>
+          {orderData.status == "unreleased" && (
+            <div className="d-flex mt-4">
+              <div
+                className="new-order-box"
+                onClick={() => setShowCancel(true)}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Cancel <br /> Order
+                  </span>
+                </a>
+              </div>
+              <div
+                className="new-order-box"
+                onClick={() => setShowRealeased(true)}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Released <br /> Order
+                  </span>
+                </a>
+              </div>
+              <div
+                className="new-order-box"
+                onClick={() => openNewOrdersModal()}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Edit <br /> Order
+                  </span>
+                </a>
+              </div>
             </div>
-            <div className="new-order-box" onClick={()=>setShowRealeased(true)}>
-              <a>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 29.09 32.89"
-                  class="nav-icon"
-                >
-                  <path
-                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
-                    class="cls-1"
-                  ></path>
-                </svg>
-                <span class="nav-text">
-                  Released <br /> Order
-                </span>
-              </a>
+          )}
+          {path == "boxShipments" && (
+            <div className="d-flex mt-4">
+              <div
+                className="new-order-box"
+                onClick={() => navigate("/boxShipments")}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Exit Without <br /> Updating
+                  </span>
+                </a>
+              </div>
+              <div
+                className="new-order-box"
+                onClick={() => setBoxShipmentModal(true)}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Process <br /> Shipment Details
+                  </span>
+                </a>
+              </div>
             </div>
-            <div className="new-order-box" onClick={() => openNewOrdersModal()}>
-              <a>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 29.09 32.89"
-                  class="nav-icon"
-                >
-                  <path
-                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
-                    class="cls-1"
-                  ></path>
-                </svg>
-                <span class="nav-text">
-                  Edit <br /> Order
-                </span>
-              </a>
+          )}
+          {path == "receiving" && orderData.status !== "received" && (
+            <div className="d-flex mt-4">
+              <div
+                className="new-order-box"
+                onClick={() => navigate("/receiving")}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Exit Without <br /> Updating
+                  </span>
+                </a>
+              </div>
+              <div
+                className="new-order-box"
+                onClick={() => setReceivingModal(true)}
+              >
+                <a>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 29.09 32.89"
+                    class="nav-icon"
+                  >
+                    <path
+                      d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
+                      class="cls-1"
+                    ></path>
+                  </svg>
+                  <span class="nav-text">
+                    Process <br /> Receiving Details
+                  </span>
+                </a>
+              </div>
             </div>
-          </div>}
-          {path == "boxShipments" && <div className="d-flex mt-4">
-            <div className="new-order-box" onClick={()=>navigate('/boxShipments')}>
-              <a>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 29.09 32.89"
-                  class="nav-icon"
-                >
-                  <path
-                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
-                    class="cls-1"
-                  ></path>
-                </svg>
-                <span class="nav-text">
-                  Exit Without <br /> Updating
-                </span>
-              </a>
-            </div>
-            <div className="new-order-box" onClick={() => setBoxShipmentModal(true)}>
-              <a>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 29.09 32.89"
-                  class="nav-icon"
-                >
-                  <path
-                    d="M10.79,29.47H3.21c-.44,0-.81-.41-.81-.88V3.28c0-.48,.37-.88,.81-.88H23.74c.44,0,.81,.41,.81,.88v13.24c0,.66,.53,1.2,1.2,1.2s1.2-.53,1.2-1.2V3.28c0-1.81-1.44-3.28-3.21-3.28H3.21C1.44,0,0,1.47,0,3.28V28.58c0,1.81,1.44,3.28,3.21,3.28h7.58c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2h0ZM20.11,7.39H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm0,6.22H6.84c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h13.27c.66,0,1.2-.53,1.2-1.2s-.54-1.2-1.2-1.2Zm-8.15,6.22H6.85c-.66,0-1.2,.53-1.2,1.2s.53,1.2,1.2,1.2h5.1c.66,0,1.2-.53,1.2-1.2s-.53-1.2-1.2-1.2Zm15.36,.31h-6.75c-.98,0-1.78,.8-1.78,1.78v.85h-3.18c-.98,0-1.78,.8-1.78,1.78v5.18c0,.98,.8,1.78,1.78,1.78h.81c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h1.78c.38,.81,1.19,1.36,2.13,1.36s1.76-.56,2.13-1.36h.58c.98,0,1.78-.8,1.78-1.78v-7.81c0-.98-.79-1.78-1.78-1.78Zm-8.76,11.34c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm6.05,0c-.53,0-.96-.43-.96-.96s.43-.96,.96-.96,.96,.43,.96,.96-.43,.96-.96,.96Zm2.5-1.96h-.38c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-1.8c-.38-.79-1.19-1.35-2.13-1.35s-1.75,.55-2.13,1.35h-.6v-4.75h3.7c.69,0,1.26-.56,1.26-1.26v-1.38h6.32v7.38h0Z"
-                    class="cls-1"
-                  ></path>
-                </svg>
-                <span class="nav-text">
-                  Process <br /> Shipment Details
-                </span>
-              </a>
-            </div>
-          </div>}
-
+          )}
         </div>
-
       )}
-       {orderData && showNewOrdersModal && (
-        <NewOrders
-          orderData={orderData}
-          key={showNewOrdersModal}
-        />
+      {orderData && showNewOrdersModal && (
+        <NewOrders orderData={orderData} key={showNewOrdersModal} />
       )}
       <Modal
         show={showCancel}
@@ -261,7 +375,7 @@ const OrderStatusDetails = ({path}) => {
           </button>
         </Modal.Header>
         <Modal.Body>
-        <div className="text-center">
+          <div className="text-center">
             <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
               Case Number
             </Form.Label>
@@ -270,29 +384,112 @@ const OrderStatusDetails = ({path}) => {
             </p>
           </div>
           <Row className="my-3">
-        <Col>
-          <Form.Group>
-            <Form.Label>Shipper</Form.Label>
-            <Form.Control
-              as="select"
-              value={shipper}
-              onChange={(e) =>
-                setShipper(e.target.value)
-              }
-            >
-              {shipperName.map((name, index) => (
-                <option value={name} key={index}>
-                  {name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-      </Row>
+            <Col>
+              <Form.Group>
+                <Form.Label>Shipper</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={shipper}
+                  onChange={(e) => setShipper(e.target.value)}
+                >
+                  {shipperName.map((name, index) => (
+                    <option value={name} key={index}>
+                      {name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
           <button
             type="button"
             className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-            onClick={() =>{setBoxShipmentModal(false);setBoxShipmenConfirmation(true)}}
+            onClick={() => {
+              setBoxShipmentModal(false);
+              setBoxShipmenConfirmation(true);
+            }}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>Confirm</span>
+            </div>
+          </button>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={ReceivingModal}
+        onHide={() => setReceivingModal(false)}
+        className="confirm-status-modal"
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>
+          <Modal.Title>Receiving Confirmation</Modal.Title>
+          <button className="btn bg-transparent close-button">
+            <i
+              className="fa-solid text-25 fa-xmark"
+              onClick={() => {
+                setReceivingModal(false);
+              }}
+            ></i>
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="text-center">
+            <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
+              Tracking Number
+            </Form.Label>
+            <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
+              {orderData?.receiveTrackingNo}
+            </p>
+          </div>
+          <Row className="my-3">
+            <Col>
+              <Form.Group className="mb-3">
+                <Form.Label>Receiver</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={receiver}
+                  onChange={(e) => setReceiver(e.target.value)}
+                >
+                  {receiverName.map((name, index) => (
+                    <option value={name} key={index}>
+                      {name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+              <Form.Group controlId="serialNumber" className="mb-3">
+                <Form.Label>Confirm Serial Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={serialNumber}
+                  onChange={(e) => setSerialNumber(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Confirm Modal</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={modal}
+                  onChange={(e) => setModal(e.target.value)}
+                >
+                  {modals.map((name, index) => (
+                    <option value={name} key={index}>
+                      {name}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Form.Group>
+            </Col>
+          </Row>
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() => {
+              setReceivingModal(false);
+              setBoxShipmenConfirmation(true);
+              handleReceived("received")
+            }}
           >
             <div className="button-container" style={{ fontSize: 12 }}>
               <span>Confirm</span>
@@ -332,8 +529,8 @@ const OrderStatusDetails = ({path}) => {
             </div>
           </button>
         </Modal.Body>
-        </Modal>
-        <Modal
+      </Modal>
+      <Modal
         show={BoxShipmenConfirmation}
         onHide={() => setBoxShipmenConfirmation(false)}
         className="confirm-status-modal"
@@ -352,28 +549,38 @@ const OrderStatusDetails = ({path}) => {
           </button>
         </Modal.Header>
         <Modal.Body>
-        <div className="text-center">
+          <div className="text-center">
             <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
               Case Number
             </Form.Label>
             <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
-              {orderData?.caseNumber}
+              {orderData?.receiveTrackingNo ? orderData?.receiveTrackingNo : orderData?.caseNumber}
             </p>
           </div>
-          <p style={{ textAlign: "left", fontSize: 18, fontWeight: 400, textTransform:"uppercase",margin:"15px 0" }}>
+          <p
+            style={{
+              textAlign: "left",
+              fontSize: 18,
+              fontWeight: 400,
+              textTransform: "uppercase",
+              margin: "15px 0",
+            }}
+          >
             Activity Status has been updated for this order
           </p>
           <button
             type="button"
             className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-            onClick={() => {handleStatusSubmit("boxShipped");setBoxShipmenConfirmation(false);}}
+            onClick={() => {
+              setBoxShipmenConfirmation(false);
+            }}
           >
             <div className="button-container" style={{ fontSize: 12 }}>
-              <span>Confirm</span>
+              <span>Ok</span>
             </div>
           </button>
         </Modal.Body>
-        </Modal>
+      </Modal>
     </>
   );
 };

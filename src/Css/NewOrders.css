@@ -55,4 +55,7 @@
     .delete-user-modal .modal-dialog {
       max-width: 512px;
     }
+    .barcode-number-modal .modal-dialog {
+        max-width: 630px;
+    }
   }

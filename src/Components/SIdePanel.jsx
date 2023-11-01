@@ -70,6 +70,7 @@ import UnReleasedOrders from "./UnreleasedOrders";
 import Logs from "./Logs";
 import Settings from "./Settings";
 import BoxShipments from "./BoxShipment";
+import Receiving from "./Receiving";
 // Import other service components
 export const tabData = {
   callCenter: {
@@ -93,9 +94,10 @@ export const tabData = {
     refurbishment: false,
     machineShipments: false,
     repairs: false,
-    receiving: false,
+    receiving: true,
     boxShipments: true,
     search: false,
+    receivingList:true
   },
 };
 
@@ -127,6 +129,7 @@ const tabDisplayNames = {
   repairs: "Repairs",
   receiving: "Receiving",
   boxShipments: "Box Shipments",
+  receivingList: "Receiving List",
 };
 function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const role = user.role.roleName;
@@ -158,7 +161,8 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
     "Onboard/Offboard":OnAndOffBoard,
     "Logs": Logs,
     "Settings": Settings,
-    "Box Shipments":BoxShipments
+    "Box Shipments":BoxShipments,
+    "Receiving":Receiving
     // Add other service components
   };
 
