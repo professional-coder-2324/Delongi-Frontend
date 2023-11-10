@@ -214,4 +214,36 @@ table > thead tr th:first-child {
   .delete-user-modal .modal-dialog {
     max-width: 512px;
   }
+  .confirm-part-modal .modal-dialog {
+    max-width: 600px;
+  }
+}
+
+.vl {
+  border-left: 3px solid black;
+  height: 40px;
+  margin: 0 25px;
+}
+input::-webkit-inner-spin-button {
+  display: none;
+}
+.action-button:disabled {
+  pointer-events: inherit !important;
+}
+.action-button:focus {
+  outline: none;
+}
+.input-parts-table .dataTables_info, .input-parts-table .dataTables_paginate, .input-parts-table .dataTables_length {
+  display: none !important;
+}
+.confirm-parts-table .dataTables_info, .confirm-parts-table .dataTables_paginate, .confirm-parts-table .dataTables_length {
+  display: none !important;
+}
+.input-parts-table {
+  height: 100%;
+  overflow-x: hidden;
+  max-height: 200px;
+}
+.confirm-parts-table table > tbody tr td:last-child, table > thead tr th:last-child{
+  text-align: center;
 }

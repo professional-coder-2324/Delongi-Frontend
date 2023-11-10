@@ -28,7 +28,9 @@ import Logs from "./Components/Logs";
 import OrderStatusDetails from "./Components/OrderStatusDetails";
 import BoxShipments from "./Components/BoxShipment";
 import Receiving from "./Components/Receiving";
-import ReceivingList from "./Components/ReceivingList";
+import Repairs from "./Components/Repairs";
+import PartManagement from "./Components/PartManagement";
+import PartEdit from "./Components/PartEdit";
 const isAuthenticated = !!localStorage.getItem("token");
 
 function App() {
@@ -75,7 +77,9 @@ function App() {
       // "Onboard/Offboard":OnAndOffBoard,
       logs: Logs,
       receiving: Receiving,
-      receivingList: ReceivingList,
+      receivingList: Repairs,
+      repairs:Repairs,
+      partManagement: PartManagement,
       // Define other mappings as needed
     }[routeName];
   }
@@ -156,6 +160,20 @@ function App() {
                     element={<OrderStatusDetails path="receiving" />}
                   />
                 )}
+                {route.path == "repairs" && (
+                  <Route
+                    path="/repairs/:id"
+                    element={<OrderStatusDetails path="repairs" />}
+                  />
+                )}
+                {
+                  user?.role?.roleName === "ACS" && (
+                    <Route
+                    path="/part/:id"
+                    element={<PartEdit />}
+                  />
+                  )
+                }
               </>
             ))}
 

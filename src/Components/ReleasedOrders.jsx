@@ -172,7 +172,6 @@ const ReleasedOrders = () => {
         </div>
       )}
       {!loading &&
-        
           <>
             <div>
               <h2 className="pb-2 title-user">Released Orders</h2>

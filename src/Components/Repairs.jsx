@@ -3,15 +3,19 @@ import { MDBDataTable } from "mdbreact";
 import "../Css/CallCenter.css";
 import "mdbreact/dist/css/mdb.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Modal } from "react-bootstrap";
 import Barcode from "../Assets/barcode.png";
-const ReceivingList = () => {
+import RepairModals from "./RepairModal";
+const Repairs = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+  const location  = useLocation()
+  const [repairs, setRepairs] = useState(false)
+  const [status, setStatus] = useState("")
+  const [orderData, setOrderData] = useState([])
   // const formatDate = (dateString) => {
   //   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   //   const date = new Date(dateString);
@@ -76,7 +80,6 @@ const ReceivingList = () => {
 
   const userAttributes = [];
   filteredData.forEach((el) => {
-    console.log(el, "eleejbedyhgbd");
     userAttributes.push({
       firstName: el.firstName,
       lastName: el.lastName,
@@ -84,8 +87,10 @@ const ReceivingList = () => {
       status: el?.status,
       createdAt: formatDate(el?.createdAt),
       id: el?._id,
+      receiveShipements: el?.receiveShipements
     });
   });
+  console.log(filteredData,"rererererra");
   useEffect(() => {
     // Implement the filter function to filter data
     const filterData = () => {
@@ -137,6 +142,13 @@ const ReceivingList = () => {
         width: 270,
       },
       {
+        label: "Action",
+        field: "process",
+        sort: "none",
+        width: 100,
+        className: "process-column",
+      },
+      {
         label: "Details",
         field: "actions",
         sort: "none",
@@ -152,7 +164,7 @@ const ReceivingList = () => {
           <button
             className="detail-button"
             onClick={() => {
-              navigate(`/receiving/${userData.id}`);
+              navigate(!location.pathname.includes("/repairs")?`/receiving/${userData.id}` : `/repairs/${userData.id}`);
             }}
           >
             <a class="" title="detail">
@@ -188,6 +200,22 @@ const ReceivingList = () => {
           </button>
         </div>
       ),
+      process: (
+        <div>
+          <button
+            className="action-button"
+            onClick={() => {
+              setOrderData(userData)
+              setRepairs(true)
+            }}
+            style={{background:"white", border:"none", cursor: userData.status !== "received" ? "not-allowed":"pointer"}}
+            disabled={userData.status !== "received"}
+          >
+         <i class="fa-regular fa-clone fa-xl" style={{color: "#10b981", opacity:userData.status !== "received" ? 0.4 : 1 }}></i>
+          </button>
+        </div>
+      ),
+    
     })),
   };
 
@@ -223,11 +251,11 @@ const ReceivingList = () => {
             </div>
           </div>
           <MDBDataTable data={data} noBottomColumns />
-          
+          {repairs && <RepairModals key={repairs} orderData={orderData} id={orderData.id} setLoading={setLoading} RepairModal={repairs} setRepairModal={setRepairs} setStatus={setStatus}/>}
         </>
       )}
     </>
   );
 };
 
-export default ReceivingList;
+export default Repairs;

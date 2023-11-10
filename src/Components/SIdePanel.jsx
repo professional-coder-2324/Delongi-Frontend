@@ -93,11 +93,12 @@ export const tabData = {
     fedExMenu: false,
     refurbishment: false,
     machineShipments: false,
-    repairs: false,
+    repairs: true,
     receiving: true,
     boxShipments: true,
     search: false,
-    receivingList:true
+    receivingList:true,
+    partManagement: true
   },
 };
 
@@ -130,6 +131,7 @@ const tabDisplayNames = {
   receiving: "Receiving",
   boxShipments: "Box Shipments",
   receivingList: "Receiving List",
+  partManagement: "Part Management",
 };
 function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const role = user.role.roleName;

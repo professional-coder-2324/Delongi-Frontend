@@ -6,16 +6,21 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Form, Modal } from "react-bootstrap";
 import Barcode from "../Assets/barcode.png";
+import ReceiveModals from "./ReceiveModals";
 const Receiving = () => {
+  console.log("calledddd");
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [receivingModal, setReceivingModal] = useState(true);
+  const [Receiving, setReceiving] = useState(false);
   const [barcodeModal, setBarcodeModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [trackingNo, setTrackingNo] = useState("");
   const [issearchSelection, setIsSearchSelection] = useState(false);
   const [selectOption, setSelectOption] = useState("");
+  const [orderData, setOrderData] = useState([])
+  const [status, setStatus] = useState("")
   const [error, setError] = useState("");
   // const formatDate = (dateString) => {
   //   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -62,13 +67,12 @@ const Receiving = () => {
           },
         }
       );
-      console.log(response.data.data,"fdfdfdfdf");
+      console.log(response.data.data, "fdfdfdfdf");
       if (response?.data?.data?.length > 0) {
         setRows(response.data.data);
-        setBarcodeModal(false)
-        setReceivingModal(false)
-        setIsSearchSelection(false)
-        
+        setBarcodeModal(false);
+        setReceivingModal(false);
+        setIsSearchSelection(false);
       } else {
         setError("Not Found!");
       }
@@ -78,15 +82,46 @@ const Receiving = () => {
       console.log(error, "Error");
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     setTimeout(() => {
-      setError("")
+      setError("");
     }, 2000);
-  },[error])
+  }, [error]);
+  useEffect(()=>{
+    console.log(status,"status");
+    const fetchData =async ()=>{
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getOrderByTrackingNo?trackingNumber=${trackingNo}&&value=${1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log(response.data.data, "fdfdfdfdf");
+        if (response?.data?.data?.length > 0) {
+          setRows(response.data.data);
+          setBarcodeModal(false);
+          setReceivingModal(false);
+          setIsSearchSelection(false);
+        } else {
+          setError("Not Found!");
+        }
+        // setLoading(false)
+      } catch (error) {
+        // setLoading(false)
+        console.log(error, "Error");
+      }
 
+    }
+   status == "done" && fetchData()
+  }
+  ,[status])
+
+  console.log(orderData, "eleejbedyhgbd");
   const userAttributes = [];
   filteredData.forEach((el) => {
-    console.log(el, "eleejbedyhgbd");
     userAttributes.push({
       firstName: el.firstName,
       lastName: el.lastName,
@@ -147,6 +182,13 @@ const Receiving = () => {
         width: 270,
       },
       {
+        label: "Action",
+        field: "process",
+        sort: "none",
+        width: 100,
+        className: "process-column",
+      },
+      {
         label: "Details",
         field: "actions",
         sort: "none",
@@ -198,6 +240,21 @@ const Receiving = () => {
           </button>
         </div>
       ),
+      process: (
+        <div>
+          <button
+            className="action-button"
+            onClick={() => {
+              setOrderData(userData)
+              setReceiving(true)
+            }}
+            style={{background:"white", border:"none", cursor: userData.status !== "boxShipped" ? "not-allowed":"pointer"}}
+            disabled={userData.status !== "boxShipped"}
+          >
+         <i class="fa-regular fa-clone fa-xl" style={{color: "#10b981", opacity:userData.status !== "boxShipped" ? 0.4 : 1 }}></i>
+          </button>
+        </div>
+      ),
     })),
   };
 
@@ -233,6 +290,7 @@ const Receiving = () => {
             </div>
           </div>
           <MDBDataTable data={data} noBottomColumns />
+          {Receiving && <ReceiveModals key={Receiving} orderData={orderData} id={orderData.id} setLoading={setLoading} ReceivingModal={Receiving} setReceivingModal={setReceiving} setStatus={setStatus}/>}
           <Modal
             show={receivingModal}
             // onHide={() => setReceivingModal(false)}
@@ -300,11 +358,28 @@ const Receiving = () => {
               <Form>
                 <Form.Group controlId="trackingNo">
                   <Form.Label>Tracking No</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={trackingNo}
-                    onChange={(e) => setTrackingNo(e.target.value)}
-                  />
+                  <div className="d-flex align-itemas-center" style={{gap:40}}>
+                    <Form.Control
+                      type="text"
+                      value={trackingNo}
+                      onChange={(e) => setTrackingNo(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          handleSubmit(1);
+                        }
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+                      onClick={() => handleSubmit(1)}
+                    >
+                      <div className="button-container">
+                        <span>Submit</span>
+                      </div>
+                    </button>
+                  </div>
                 </Form.Group>
               </Form>
               <div className="text-center mt-3">
@@ -337,15 +412,8 @@ const Receiving = () => {
                   <span>Back</span>
                 </div>
               </button>
-              <button
-                type="button"
-                className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-                onClick={()=>handleSubmit(1)}
-              >
-                <div className="button-container">
-                  <span>Submit</span>
-                </div>
-              </button>
+                <div>
+
               <button
                 type="button"
                 className="btn btn-icon btn-sm display-6 create-user-button"
@@ -369,6 +437,7 @@ const Receiving = () => {
                   <span>View RECEIVING LIST</span>
                 </div>
               </button>
+                </div>
               {/* {isNotWorking && <div className="text-end">
               <button
                   type="button"
@@ -447,7 +516,7 @@ const Receiving = () => {
                 <button
                   type="button"
                   className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-                  onClick={()=>handleSubmit(2)}
+                  onClick={() => handleSubmit(2)}
                 >
                   <div className="button-container">
                     <span>Submit</span>
