@@ -171,7 +171,18 @@ const findRoleName = (roleId) => {
     setSelectedOptions(selectedList);
     setSelectedOptionsError(""); // Clear the error when a selection is removed
   };
-
+  function formatRoleName(roleName) {
+    if (roleName === roleName.toUpperCase()) {
+      // If all characters are in uppercase, return the roleName as is
+      return roleName;
+    } else {
+      // Split the roleName by capital letters or space and join with space
+      return roleName
+        .replace(/([A-Z])/g, ' $1') // insert space before capital letters
+        .replace(/^./, (str) => str.toUpperCase()); // capitalize the first letter
+    }
+  }
+  
   return (
     <Modal show={show} onHide={handleClose} className="create-user-modal">
       <Modal.Header>
@@ -268,7 +279,7 @@ const findRoleName = (roleId) => {
                   <option value="">Select Department</option>
                   {user?.department?.map((data, index) => (
                     <option value={data._id} key={index}>
-                      {data.roleName}
+                      {formatRoleName(data.roleName)}
                     </option>
                   ))}
                 </Form.Control>

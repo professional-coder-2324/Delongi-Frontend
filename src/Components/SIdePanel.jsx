@@ -86,19 +86,25 @@ export const tabData = {
     search: false,
   },
   ACS: {
+    boxShipments: true,
+    receiving: true,
+    receivingList:true,
+    repairs: true,
+    partManagement: true,
     logs: true,
     reports: false,
     caseStatus: false,
-    partManagement: false,
+    // partManagement: true,
     fedExMenu: false,
     refurbishment: false,
     machineShipments: false,
-    repairs: true,
-    receiving: true,
-    boxShipments: true,
     search: false,
-    receivingList:true,
-    partManagement: true
+  },
+  SuperAdmin: {
+    board: true,
+    logs: true,
+    people: true,
+    settings: true
   },
 };
 
@@ -132,6 +138,9 @@ const tabDisplayNames = {
   boxShipments: "Box Shipments",
   receivingList: "Receiving List",
   partManagement: "Part Management",
+  board: "Onboard/Offboard",
+  people:"People",
+  settings: "Settings",
 };
 function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const role = user.role.roleName;
@@ -164,7 +173,8 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
     "Logs": Logs,
     "Settings": Settings,
     "Box Shipments":BoxShipments,
-    "Receiving":Receiving
+    "Receiving":Receiving,
+
     // Add other service components
   };
 
@@ -192,8 +202,8 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const handleSubTabClick = (subTab) => {
     setSelectedSubTab(subTab);
   };
-  const SelectedTabComponent = serviceComponents[selectedTab];
-  const SelectedSubTabComponent = serviceComponents[selectedSubTab];
+  // const SelectedTabComponent = serviceComponents[selectedTab];
+  // const SelectedSubTabComponent = serviceComponents[selectedSubTab];
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 

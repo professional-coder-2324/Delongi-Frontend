@@ -48,6 +48,9 @@
     box-shadow: none !important;
     background: white !important;
 }
+.close-button {
+    padding: 0;
+}
 @media (min-width: 992px) {
     .new-order-modal .modal-dialog {
       max-width: 800px;

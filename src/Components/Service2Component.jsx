@@ -249,7 +249,7 @@ const DatatablePage = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>{" "}
-          <div class="c">
+          {user?.role?.roleName && user?.role?.roleName !="callCenter" && <div class="c">
             <div class="mt-2 mb-3">
               <button
                 type="button"
@@ -306,7 +306,7 @@ const DatatablePage = () => {
                 </div>
               </button>
             </div>
-          </div>
+          </div>}
         </div>
         {/* ... Your create user button ... */}
         <CreateUserModal

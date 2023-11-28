@@ -371,8 +371,8 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     dateOfPurchase: "",
     defectReported: "",
     reasonCode: "",
-    inWarranty: false,
-    boxRequired: false,
+    inWarranty: true,
+    boxRequired: true,
   });
   useEffect(() => {
     if (showNewOrdersModal && orderData) {
@@ -479,6 +479,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     });
   };
   const handleSubmit = async (orderStatus) => {
+    
     setShowConfirmReleasedModal(false);
     setShowConfirmModal(false);
     // Add logic to handle form submission
@@ -869,7 +870,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
             <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 20 }}>
               {caseNumber}
             </p> */}
-          <p style={{ textAlign: "left", fontSize: 17, fontWeight: 400 }}>
+          <p style={{ textAlign: "center", fontSize: 17, fontWeight: 400 }}>
             Release Box Picking Order to Service Center
           </p>
           {/* <button

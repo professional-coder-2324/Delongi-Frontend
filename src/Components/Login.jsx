@@ -24,7 +24,7 @@ function Login() {
   }, []);
   const SubmitLogin = async () => {
     console.log(checkUserNameCond,checkPwCond,"CVsdcsand");
-    if (checkUserNameCond && checkPwCond) {
+    if (password && username) {
       setIsLoading(true);
 
       const payload = {
@@ -70,6 +70,10 @@ function Login() {
       setCheckPwCond(true);
     }
   };
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    SubmitLogin();
+  };
 
   return (
     <div className="login-container">
@@ -85,7 +89,7 @@ function Login() {
                 Sign In
               </h1>
 
-              <Form >
+              <Form  onSubmit={handleFormSubmit}>
                 <Form.Group controlId="setUserName" className="text-12">
                   <Form.Label>username</Form.Label>
                   <Form.Control
@@ -115,12 +119,12 @@ function Login() {
                 </div>
 
                 <Button
-                  type="button"
+                  type="submit"
                   className="btn-block mt-2"
                   variant="primary"
                   disabled={isLoading}
                   style={{ borderRadius: '25px' }}
-                  onClick={SubmitLogin}
+                  // onClick={SubmitLogin}
                 >
                   Sign In
                 </Button>

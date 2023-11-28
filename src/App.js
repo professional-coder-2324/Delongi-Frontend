@@ -31,6 +31,9 @@ import Receiving from "./Components/Receiving";
 import Repairs from "./Components/Repairs";
 import PartManagement from "./Components/PartManagement";
 import PartEdit from "./Components/PartEdit";
+import OnAndOffBoard from "./Components/OnAndOffBoard";
+import Settings from "./Components/Settings";
+import Receipt from "./Components/Receipt";
 const isAuthenticated = !!localStorage.getItem("token");
 
 function App() {
@@ -38,11 +41,11 @@ function App() {
   const [loading, setLoading] = useState(false); // Add a loading state
   const location = useLocation();
   const [isNavOpen, setIsNavOpen] = useState(true);
-  const token = localStorage.getItem("token")
-  console.log(token,"dfdfdfdfdfdf");
+  const token = localStorage.getItem("token");
+  console.log(token, "dfdfdfdfdfdf");
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_BACKEND_URL}/api/auth/getOneUser`,
@@ -73,13 +76,16 @@ function App() {
       releasedOrder: ReleasedOrders,
       unreleasedOrders: UnReleasedOrders,
       dataFiles: DataFiles,
-      boxShipments:BoxShipments,
+      boxShipments: BoxShipments,
       // "Onboard/Offboard":OnAndOffBoard,
       logs: Logs,
       receiving: Receiving,
       receivingList: Repairs,
-      repairs:Repairs,
+      repairs: Repairs,
       partManagement: PartManagement,
+      board: OnAndOffBoard,
+      settings: Settings,
+      people: DatatablePage
       // Define other mappings as needed
     }[routeName];
   }
@@ -126,6 +132,7 @@ function App() {
         ) : (
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/receipt" element={<Receipt />} />
             <Route
               path="/dashboard"
               element={
@@ -135,6 +142,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             {routeConfig.map((route) => (
               <>
                 <Route
@@ -148,13 +156,13 @@ function App() {
                     element={<OrderStatusDetails />}
                   />
                 )}
-                 {route.path == "boxShipments" && (
+                {route.path == "boxShipments" && (
                   <Route
                     path="/boxShipments/:id"
                     element={<OrderStatusDetails path="boxShipments" />}
                   />
                 )}
-                 {route.path == "receiving" && (
+                {route.path == "receiving" && (
                   <Route
                     path="/receiving/:id"
                     element={<OrderStatusDetails path="receiving" />}
@@ -166,14 +174,9 @@ function App() {
                     element={<OrderStatusDetails path="repairs" />}
                   />
                 )}
-                {
-                  user?.role?.roleName === "ACS" && (
-                    <Route
-                    path="/part/:id"
-                    element={<PartEdit />}
-                  />
-                  )
-                }
+                {user?.role?.roleName === "ACS" && (
+                  <Route path="/part/:id" element={<PartEdit />} />
+                )}
               </>
             ))}
 

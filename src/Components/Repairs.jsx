@@ -12,10 +12,10 @@ const Repairs = () => {
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const location  = useLocation()
-  const [repairs, setRepairs] = useState(false)
-  const [status, setStatus] = useState("")
-  const [orderData, setOrderData] = useState([])
+  const location = useLocation();
+  const [repairs, setRepairs] = useState(false);
+  const [status, setStatus] = useState("");
+  const [orderData, setOrderData] = useState([]);
   // const formatDate = (dateString) => {
   //   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   //   const date = new Date(dateString);
@@ -29,54 +29,53 @@ const Repairs = () => {
     return `${day}-${month}-${year}`;
   };
 
-    useEffect(() => {
-      setLoading(true)
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getReceivedOrders`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          setRows(response.data.data);
-          setLoading(false)
-        } catch (error) {
-          setLoading(false)
-          console.log(error, "Error");
-        }
-      };
-      fetchData();
-    }, []);
-//   const handleSubmit = async (type) => {
-//     // setLoading(true)
-//     try {
-//       const response = await axios.get(
-//         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getOrderByTrackingNo?trackingNumber=${trackingNo}&&value=${type}`,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//           },
-//         }
-//       );
-//       if (response?.data?.data?.length > 0) {
-//         setRows(response.data.data);
-//         setBarcodeModal(false)
-//         setReceivingMoListdal(false)
-//         setIsSearchSelection(false)
-//       } else {
-//         console.log("fdfdfdfdf");
-//         setError("Not Found!");
-//       }
-//       // setLoading(false)
-//     } catch (error) {
-//       // setLoading(false)
-//       console.log(error, "Error");
-//     }
-//   };
-
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getReceivedOrders`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setRows(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error, "Error");
+      }
+    };
+    fetchData();
+  }, []);
+  //   const handleSubmit = async (type) => {
+  //     // setLoading(true)
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getOrderByTrackingNo?trackingNumber=${trackingNo}&&value=${type}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //           },
+  //         }
+  //       );
+  //       if (response?.data?.data?.length > 0) {
+  //         setRows(response.data.data);
+  //         setBarcodeModal(false)
+  //         setReceivingMoListdal(false)
+  //         setIsSearchSelection(false)
+  //       } else {
+  //         console.log("fdfdfdfdf");
+  //         setError("Not Found!");
+  //       }
+  //       // setLoading(false)
+  //     } catch (error) {
+  //       // setLoading(false)
+  //       console.log(error, "Error");
+  //     }
+  //   };
 
   const userAttributes = [];
   filteredData.forEach((el) => {
@@ -87,10 +86,10 @@ const Repairs = () => {
       status: el?.status,
       createdAt: formatDate(el?.createdAt),
       id: el?._id,
-      receiveShipements: el?.receiveShipements
+      receiveShipements: el?.receiveShipements,
     });
   });
-  console.log(filteredData,"rererererra");
+  console.log(filteredData, "rererererra");
   useEffect(() => {
     // Implement the filter function to filter data
     const filterData = () => {
@@ -164,7 +163,11 @@ const Repairs = () => {
           <button
             className="detail-button"
             onClick={() => {
-              navigate(!location.pathname.includes("/repairs")?`/receiving/${userData.id}` : `/repairs/${userData.id}`);
+              navigate(
+                !location.pathname.includes("/repairs")
+                  ? `/receiving/${userData.id}`
+                  : `/repairs/${userData.id}`
+              );
             }}
           >
             <a class="" title="detail">
@@ -202,20 +205,43 @@ const Repairs = () => {
       ),
       process: (
         <div>
-          <button
+          {/* <button
             className="action-button"
             onClick={() => {
-              setOrderData(userData)
-              setRepairs(true)
+              setOrderData(userData);
+              setRepairs(true);
             }}
-            style={{background:"white", border:"none", cursor: userData.status !== "received" ? "not-allowed":"pointer"}}
+            style={{
+              background: "white",
+              border: "none",
+              cursor:
+                userData.status !== "received" ? "not-allowed" : "pointer",
+            }}
             disabled={userData.status !== "received"}
           >
-         <i class="fa-regular fa-clone fa-xl" style={{color: "#10b981", opacity:userData.status !== "received" ? 0.4 : 1 }}></i>
+            <i
+              class="fa-regular fa-clone fa-xl"
+              style={{
+                color: "#10b981",
+                opacity: userData.status !== "received" ? 0.4 : 1,
+              }}
+            ></i>
+          </button> */}
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() => {
+              setOrderData(userData);
+              setRepairs(true);
+            }}
+            disabled={userData.status !== "received"}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>Continue</span>
+            </div>
           </button>
         </div>
       ),
-    
     })),
   };
 
@@ -251,7 +277,17 @@ const Repairs = () => {
             </div>
           </div>
           <MDBDataTable data={data} noBottomColumns />
-          {repairs && <RepairModals key={repairs} orderData={orderData} id={orderData.id} setLoading={setLoading} RepairModal={repairs} setRepairModal={setRepairs} setStatus={setStatus}/>}
+          {repairs && (
+            <RepairModals
+              key={repairs}
+              orderData={orderData}
+              id={orderData.id}
+              setLoading={setLoading}
+              RepairModal={repairs}
+              setRepairModal={setRepairs}
+              setStatus={setStatus}
+            />
+          )}
         </>
       )}
     </>
