@@ -3,7 +3,7 @@ import { MDBDataTable } from "mdbreact";
 import "../Css/CallCenter.css";
 import "mdbreact/dist/css/mdb.css";
 import axios from "axios";
-import Logo from "../Assets/logo.png";
+import Logo from "../Assets/delonghi.svg";
 import NewOrders, { SecondModal, ThirdModal } from "./NewOrders";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "./ModalContext";

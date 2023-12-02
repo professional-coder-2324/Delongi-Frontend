@@ -24,6 +24,7 @@ const DatatablePage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [editData, setEditData] = useState([]);
   useEffect(() => {
+    const token = localStorage.getItem("token")
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -41,7 +42,7 @@ const DatatablePage = () => {
       }
     };
 
-    fetchData();
+    token && fetchData();
   }, []);
 
   useEffect(() => {

@@ -98,8 +98,8 @@
 }
 .create-user-button {
   color: white !important;
-  border: 1px solid black !important;
-  background-color: black !important;
+  border: 1px solid black;
+  background-color: black ;
 }
 .create-user-button:hover {
   background: black !important;
@@ -123,7 +123,7 @@
   padding: 0 !important;
   box-shadow: none !important;
 }
-.edit-button {
+.edit-button,.edit-button-parts {
   background: none;
   font-size: 17px;
   color: #10b981;
@@ -131,9 +131,11 @@
   padding: 3px;
   margin-right: 5px;
   border-radius: 5px;
+  cursor: pointer;
 }
-.edit-button:focus,
-.delete-button:focus {
+
+.edit-button:focus,.edit-button-parts:focus,
+.delete-button:focus, .delete-button-parts:focus {
   outline: none !important;
 }
 .edit-button i {
@@ -142,13 +144,14 @@
   border: 1px solid #10b981;
 }
 
-.delete-button {
+.delete-button, .delete-button-parts {
   background: none;
   font-size: 14px;
   color: #ef4444;
   border: 1px solid #ef4444;
   border-radius: 50%;
   padding: 5px 10px;
+  cursor: pointer;
 }
 table > tbody tr td:last-child,
 table > thead tr th:last-child {

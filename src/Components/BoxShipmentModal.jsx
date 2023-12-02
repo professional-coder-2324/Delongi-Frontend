@@ -11,7 +11,7 @@ const BoxShipmentModals = ({
   setOrderData,
   setStatus,
 }) => {
-  console.log(BoxShipmentModal, "vdsfgsdjkgh");
+  console.log(orderData, "vdsfgsdjkgh");
   const [boxShipment, setBoxShipment] = useState(BoxShipmentModal);
   const [BoxShipmenConfirmation, setBoxShipmenConfirmation] = useState(false);
   const [shipperName] = useState([
@@ -50,7 +50,7 @@ const BoxShipmentModals = ({
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateBoxshipment`,
         {
-          orderId: orderData.id,
+          orderId: orderData._id,
           status: status,
           shipperName: shipper,
         },
@@ -60,7 +60,7 @@ const BoxShipmentModals = ({
           },
         }
       );
-    //   setLoading(false);
+      //   setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error, "Error");
@@ -82,7 +82,7 @@ const BoxShipmentModals = ({
               className="fa-solid text-25 fa-xmark"
               onClick={() => {
                 setBoxShipment(false);
-                setBoxShipmentModal(false)
+                setBoxShipmentModal(false);
               }}
             ></i>
           </button>
@@ -144,6 +144,7 @@ const BoxShipmentModals = ({
               className="fa-solid text-25 fa-xmark"
               onClick={() => {
                 setBoxShipmenConfirmation(false);
+                navigate("/unreleasedOrders");
               }}
             ></i>
           </button>
@@ -177,6 +178,7 @@ const BoxShipmentModals = ({
               setBoxShipmenConfirmation(false);
               setBoxShipmentModal(false);
               setStatus && setStatus("done");
+              navigate("/unreleasedOrders");
             }}
           >
             <div className="button-container" style={{ fontSize: 12 }}>

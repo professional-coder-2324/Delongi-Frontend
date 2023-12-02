@@ -51,8 +51,8 @@
   align-items: center;
   border: 3px solid rgba(121, 121, 121, 0.45);
   position: absolute;
-  left: calc(50% - 25px);
-  top: calc(50% + 45px);
+  left: calc(50% - 130px);
+  top: calc(50% - 80px);
   width: 45px;
   height: 45px;
   border-radius: 50%;
@@ -66,8 +66,14 @@
 }
 
 .spinner-container img {
-  width: 70px; /* Adjust the width as needed */
-  height: 70px; /* Adjust the height as needed */
+  width: 0px; /* Adjust the width as needed */
+  height: 0px; /* Adjust the height as needed */
   
 }
 
+.gap-2 {
+  gap: 10px;
+}
+.gap-3 {
+  gap: 20px;
+}

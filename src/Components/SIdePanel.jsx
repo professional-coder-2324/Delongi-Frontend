@@ -57,6 +57,7 @@ import "../Css/SidePanel.css";
 import React, { useState } from "react";
 import Service1Component from "./Service1Component";
 import Service2Component from "./Service2Component";
+import Logo from "../Assets/delonghi.svg";
 import servicesData from "../Data/test";
 import NewOrders from "./NewOrders";
 import { useEffect } from "react";
@@ -74,10 +75,10 @@ import Receiving from "./Receiving";
 // Import other service components
 export const tabData = {
   callCenter: {
-    users:true,
+    users: true,
     newOrder: true,
     orderStatus: true,
-    releasedOrder: true,
+    releaseOrder: true,
     unreleasedOrders: true,
     dataFiles: true,
     search: false,
@@ -88,8 +89,9 @@ export const tabData = {
   ACS: {
     boxShipments: true,
     receiving: true,
-    receivingList:true,
+    receivingList: true,
     repairs: true,
+    trashed: true,
     partManagement: true,
     logs: true,
     reports: false,
@@ -104,7 +106,7 @@ export const tabData = {
     board: true,
     logs: true,
     people: true,
-    settings: true
+    settings: true,
   },
 };
 
@@ -124,7 +126,7 @@ const tabDisplayNames = {
   technician: "Technician",
   newOrder: "New Orders",
   orderStatus: "Order Status",
-  releasedOrder: "Released Orders",
+  releaseOrder: "Release Orders",
   unreleasedOrders: "Unreleased Orders",
   search: "Search",
   reports: "Reports",
@@ -139,19 +141,20 @@ const tabDisplayNames = {
   receivingList: "Receiving List",
   partManagement: "Part Management",
   board: "Onboard/Offboard",
-  people:"People",
+  people: "People",
   settings: "Settings",
+  trashed: "Trashed",
 };
 function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const role = user.role.roleName;
   console.log("rowelwedw", role);
   const services = servicesData[role];
- 
+
   const [selectedTab, setSelectedTab] = useState(null);
   const [selectedSubTab, setSelectedSubTab] = useState(null);
   const [tabKey, setTabKey] = useState(0);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
@@ -163,41 +166,41 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const serviceComponents = {
     Service1: Service1Component,
     People: Service2Component,
-    Users:Service2Component,
+    Users: Service2Component,
     "New Orders": NewOrders,
-    "Order Status":OrderStatus,
-    "Released Order":ReleasedOrders,
-    "Unreleased Orders":UnReleasedOrders,
+    "Order Status": OrderStatus,
+    "Released Order": ReleasedOrders,
+    "Unreleased Orders": UnReleasedOrders,
     "Data Files": DataFiles,
-    "Onboard/Offboard":OnAndOffBoard,
-    "Logs": Logs,
-    "Settings": Settings,
-    "Box Shipments":BoxShipments,
-    "Receiving":Receiving,
+    "Onboard/Offboard": OnAndOffBoard,
+    Logs: Logs,
+    Settings: Settings,
+    "Box Shipments": BoxShipments,
+    Receiving: Receiving,
 
     // Add other service components
   };
 
   const handleServiceClick = (tabName) => {
     switch (tabName) {
-      case 'newOrder':
-        navigate('/new');
+      case "newOrder":
+        navigate("/new");
         break;
-      case 'orderStatus':
-        navigate('/order-status');
+      case "orderStatus":
+        navigate("/order-status");
         break;
       // Add cases for other tab routes
       default:
         break;
     }
-    console.log(selectedTab,"sdffdfdfdf");
-      // if (selectedTab === serviceName) {
-      //   setTabKey((prevKey) => prevKey + 1)
-      // } else {
-      //   setSelectedTab(serviceName);
-      // }
-      // setSelectedSubTab(null); // Reset the selected sub-tab
-    };
+    console.log(selectedTab, "sdffdfdfdf");
+    // if (selectedTab === serviceName) {
+    //   setTabKey((prevKey) => prevKey + 1)
+    // } else {
+    //   setSelectedTab(serviceName);
+    // }
+    // setSelectedSubTab(null); // Reset the selected sub-tab
+  };
 
   const handleSubTabClick = (subTab) => {
     setSelectedSubTab(subTab);
@@ -228,11 +231,11 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
       document.removeEventListener("click", closeDropdown);
     };
   }, [isDropdownOpen]);
-  const handleLogout =()=>{
+  const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.reload()
+    window.location.reload();
     // navigate("/login")
-  }
+  };
   const renderTabs = () => {
     const tabs = [];
     Object.entries(tabData).forEach(([category, categoryData]) => {
@@ -240,25 +243,22 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
         if (tabValue) {
           tabs.push(
             <>
-             <li
-                  key={tabName}
-                  onClick={() => navigate(tabName)}
-                  className={selectedTab === tabName ? "active" : ""}
-                >
-                  <i
-                    className={`fa fa-people-arrows`}
-                    aria-hidden="true"
-                  ></i>
-                 {tabDisplayNames[tabName]}
-                </li>
-            {/* <div
+              <li
+                key={tabName}
+                onClick={() => navigate(tabName)}
+                className={selectedTab === tabName ? "active" : ""}
+              >
+                <i className={`fa fa-people-arrows`} aria-hidden="true"></i>
+                {tabDisplayNames[tabName]}
+              </li>
+              {/* <div
               key={tabName}
               onClick={() => navigate(tabName)}
               className={selectedTab === tabName ? "active" : ""}
               >
               {tabName}
             </div> */}
-              </>
+            </>
           );
         }
       });
@@ -269,48 +269,57 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
   return (
     <div className="navbar-container">
       <div className="top-nav">
-        <button onClick={toggleNav} className="nav-toggle-button">
-          <i class="fa-solid fa-bars" style={{ color: "black" }}></i>
-        </button>
-        <div className="dropbtn" ref={dropdownRef}  onClick={toggleSetting}>
+        <div className="d-flex justify-content-between align-items-center gap-3">
+          <img src={Logo} />
+          <button onClick={toggleNav} className="nav-toggle-button">
+            <i class="fa-solid fa-bars" style={{ color: "black" }}></i>
+          </button>
+        </div>
+        <div className="dropbtn" ref={dropdownRef} onClick={toggleSetting}>
           <i
             className="fa-solid fa-cog"
             style={{ color: "black", cursor: "pointer" }}
           ></i>
-         {isDropdownOpen && (
-          <div className="dropdown-content" id="myDropdown">
-            <div class="dropdown-header"><i class="fa-solid fa-user-plus"></i><span className="text-capitalize">{ user?.firstName + " "+ user?.lastName  }</span></div>
-            <a href="" class="dropdown-item">Profile</a>
-            <a href="" class="dropdown-item">Settings</a>
-            <a href="" class="dropdown-item" onClick={handleLogout}>Logout</a>
-          </div>
-        )}
+          {isDropdownOpen && (
+            <div className="dropdown-content" id="myDropdown">
+              <div class="dropdown-header">
+                <i class="fa-solid fa-user-plus"></i>
+                <span className="text-capitalize">
+                  {user?.firstName + " " + user?.lastName}
+                </span>
+              </div>
+              <a href="" class="dropdown-item">
+                Profile
+              </a>
+              <a href="" class="dropdown-item">
+                Settings
+              </a>
+              <a href="" class="dropdown-item" onClick={handleLogout}>
+                Logout
+              </a>
+            </div>
+          )}
         </div>
       </div>
       <div className="main-content">
         <div className={`navbar ${isNavOpen ? "open" : ""}`}>
           <ul>
             {/* {renderTabs()} */}
-            {Object.entries(tabData[role]).map(([category, categoryData]) =>
-              categoryData && (
-                <li
-                  key={category}
-                  onClick={() => navigate(category)}
-                  className={selectedTab === category ? "active" : ""}
-                >
-                  <i
-                    className={`fa fa-people-arrows`}
-                    aria-hidden="true"
-                  ></i>
-                 {tabDisplayNames[category] || category}
-                </li>
-              )
-            
+            {Object.entries(tabData[role]).map(
+              ([category, categoryData]) =>
+                categoryData && (
+                  <li
+                    key={category}
+                    onClick={() => navigate(category)}
+                    className={selectedTab === category ? "active" : ""}
+                  >
+                    <i className={`fa fa-people-arrows`} aria-hidden="true"></i>
+                    {tabDisplayNames[category] || category}
+                  </li>
+                )
             )}
-            
           </ul>
         </div>
-
       </div>
     </div>
   );

@@ -1,43 +1,115 @@
 /* SignIn.css */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@700&family=Montserrat:wght@400;600&display=swap");
 .login-container {
-    background: url('../Assets//photo-wide-4.jpg');
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-size: cover;
-    padding: 15px 0;
+  background: url("../Assets/background_delonghi.png");
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 15px 0;
 }
 
 .auth-logo img {
-    width: 100px;
-    height: 100px;
+  width: 250px;
+  height: auto;
 }
-
+.auth-logo h3 {
+  color: #000;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25.098px; /* 114.08% */
+  margin: 10px 0;
+}
+.auth-logo h1 {
+  color: #000;
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 28px;
+  text-transform: uppercase;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25.098px; /* 78.43% */
+}
+.input-container {
+  position: relative;
+}
+.input-container img {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translate(-50%, -50%);
+}
+.input-container .password-eye {
+  left: inherit !important;
+  right: 0;
+  cursor: pointer;
+}
+.input-container input {
+  padding-left: 35px;
+  color: #424856;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 25.098px;
+  margin-bottom: 5px;
+}
+.btn-block {
+  border-radius: 7.171px;
+  background: #255398 !important;
+}
+.forgot-password u {
+  color: #255398;
+  text-align: right;
+  font-family: Manrope;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.72px; /* 157.143% */
+  text-decoration-line: underline;
+}
+label {
+  color: #424856;
+  font-family: Manrope;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 25.098px;
+  margin-bottom: 5px;
+}
 .login-box {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
-    border: 0;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.08);
+  border: 0;
 }
-input[type="radio"] {
-    accent-color: black;
-  }
-@media (max-width: 400px){
-.login-wrap {
+input[type="radio"], input[type="checkbox"] {
+  accent-color: black;
+}
+input[type="checkbox"] {
+  width: 20px;
+  margin-top: 7px;
+}
+@media (max-width: 400px) {
+  .login-wrap {
     min-width: 280px;
-}
+  }
 }
 @media (max-width: 1024px) and (min-width: 400px) {
-    .login-wrap {
-        min-width: 320px;
-    }
+  .login-wrap {
+    min-width: 320px;
+  }
 }
 @media (min-width: 1024px) {
-
-    .login-wrap {
-        min-width: 340px;
-    }
+  .login-wrap {
+    min-width: 400px;
+  }
 }

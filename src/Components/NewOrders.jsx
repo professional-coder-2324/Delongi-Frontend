@@ -224,8 +224,22 @@ export const ThirdModal = ({
       <Row className="mb-2">
         <Col>
           <Form.Group>
-            <Form.Label>Retailer Name</Form.Label>
+            <Form.Label>SAP Code</Form.Label>
             <Form.Control
+              type="text"
+              name="SAPCode"
+              value={formData.SAPCode}
+              onChange={handleChange}
+              // disabled={disabled}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+      <Row className="mb-2">
+        <Col>
+          <Form.Group>
+            <Form.Label>Retailer Name</Form.Label>
+            {/* <Form.Control
               as="select"
               name="retailerName"
               value={formData.retailerName}
@@ -238,8 +252,15 @@ export const ThirdModal = ({
                 <option value={name} key={index}>
                   {name}
                 </option>
-              ))}
-            </Form.Control>
+              ))} */}
+              <Form.Control
+              type="text"
+              name="retailerName"
+              value={formData.retailerName}
+              onChange={handleChange}
+              // disabled={disabled}
+            />
+            {/* </Form.Control> */}
           </Form.Group>
         </Col>
       </Row>
@@ -258,7 +279,7 @@ export const ThirdModal = ({
           </Form.Group>
         </Col>
       </Row>
-      <Row className="mb-2">
+      {/* <Row className="mb-2">
         <Col>
           <Form.Group>
             <Form.Label>Reason Code</Form.Label>
@@ -279,7 +300,7 @@ export const ThirdModal = ({
             </Form.Control>
           </Form.Group>
         </Col>
-      </Row>
+      </Row> */}
       <Row className="mb-2">
         <Col md={6} sm={12}>
           <Form.Group>
@@ -294,7 +315,7 @@ export const ThirdModal = ({
                 onChange={handleChange}
                 disabled={disabled}
               />
-              <Form.Check
+              {/* <Form.Check
                 type="radio"
                 label="No"
                 name="inWarranty"
@@ -302,7 +323,7 @@ export const ThirdModal = ({
                 checked={formData.inWarranty === false}
                 onChange={handleChange}
                 disabled={disabled}
-              />
+              /> */}
             </div>
           </Form.Group>
         </Col>
@@ -339,21 +360,26 @@ const NewOrders = ({ orderData, setIsEdit }) => {
   const { openNewOrdersModal, showNewOrdersModal, closeNewOrdersModal } =
     useModal();
 
-    const [showCaseModal, setShowCaseModal] = useState(
-      showNewOrdersModal ? showNewOrdersModal : false
-      );
-      const [caseNumber, setCaseNumber] = useState(
-        orderData?.caseNumber ? orderData.caseNumber : ""
-        );
-        const {id} = useParams()
-        console.log(orderData, id, "orderData");
+  const [showCaseModal, setShowCaseModal] = useState(
+    showNewOrdersModal ? showNewOrdersModal : orderData?._id ? false : true
+  );
+  const [caseNumber, setCaseNumber] = useState(
+    orderData?.caseNumber ? orderData.caseNumber : ""
+  );
+  const [error, setError] = useState("");
+  const { id } = useParams();
+  console.log(orderData, id, "orderData");
   const [showSecondModal, setShowSecondModal] = useState(false);
   const [showThirdModal, setShowThirdModal] = useState(false);
   const [showFinalModal, setShowFinalModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showConfirmReleasedModal, setShowConfirmReleasedModal] =
     useState(false);
-
+  useEffect(() => {
+    setTimeout(() => {
+      setError("");
+    }, 2000);
+  }, [error]);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -370,9 +396,10 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     retailerName: "",
     dateOfPurchase: "",
     defectReported: "",
-    reasonCode: "",
+    // reasonCode: "",
     inWarranty: true,
     boxRequired: true,
+    SAPCode:""
   });
   useEffect(() => {
     if (showNewOrdersModal && orderData) {
@@ -382,23 +409,51 @@ const NewOrders = ({ orderData, setIsEdit }) => {
   }, [showNewOrdersModal]);
   const [currentStep, setCurrentStep] = useState(1);
 
+  console.log(currentStep, "currentStep");
   const handleNext = () => {
-    console.log(currentStep, "currentStep");
     if (currentStep === 1) {
       // Save data from the first modal
       setShowSecondModal(true);
       setShowCaseModal(false);
       setCurrentStep(2);
     } else if (currentStep === 2) {
-      // Save data from the second modal
-      setShowThirdModal(true);
-      setShowSecondModal(false);
-      setCurrentStep(3);
+      if (
+        formData.firstName.length <= 0 ||
+        formData.lastName.length <= 0 ||
+        formData.address.length <= 0 ||
+        formData.city.length <= 0 ||
+        formData.zipCode.length <= 0 ||
+        formData.state.length <= 0 ||
+        formData.phone.length <= 0 ||
+        formData.email.length <= 0
+      ) {
+        setError("Please Enter All Details.");
+      } else {
+        // Save data from the second modal
+        setShowThirdModal(true);
+        setShowSecondModal(false);
+        setCurrentStep(3);
+      }
     } else if (currentStep === 3) {
-      // Save data from the second modal
-      setShowFinalModal(true);
-      setShowThirdModal(false);
-      setCurrentStep(4);
+      if (
+        formData.model.length <= 0 ||
+        formData.brand.length <= 0 ||
+        formData.category.length <= 0 ||
+        formData.serialNumber.length <= 0 ||
+        formData.retailerName.length <= 0 ||
+        formData.dateOfPurchase.length <= 0 ||
+        formData.defectReported.length <= 0 ||
+        formData.reasonCode.length <= 0 ||
+        formData.inWarranty.length <= 0 ||
+        formData.boxRequired.length <= 0
+      ) {
+        setError("Please Enter All Details.");
+      } else {
+        // Save data from the second modal
+        setShowFinalModal(true);
+        setShowThirdModal(false);
+        setCurrentStep(4);
+      }
     } else if (currentStep === 4) {
       // Save data from the second modal
       setShowConfirmModal(true);
@@ -431,13 +486,13 @@ const NewOrders = ({ orderData, setIsEdit }) => {
   };
   const [models] = useState(["Select Model", "Model A", "Model B", "Model C"]);
   const [categories] = useState({
-    "Select Model": [],
+    "Select Model": [""],
     "Model A": ["Category 1"],
     "Model B": ["Category 2"],
     "Model C": ["Category 3"],
   });
   const [brands] = useState({
-    "Select Model": [],
+    "Select Model": [""],
     "Model A": ["Brand 1"],
     "Model B": ["Brand 2"],
     "Model C": ["Brand 3"],
@@ -459,7 +514,6 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     setShowCaseModal(false);
     setCurrentStep(1);
     setCaseNumber("");
-    setFormData({});
   };
 
   const handleCaseNumberSubmit = () => {
@@ -479,7 +533,6 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     });
   };
   const handleSubmit = async (orderStatus) => {
-    
     setShowConfirmReleasedModal(false);
     setShowConfirmModal(false);
     // Add logic to handle form submission
@@ -492,7 +545,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
       caseNumber: caseNumber,
     };
     if (id) {
-      data.orderId = id
+      data.orderId = id;
       try {
         await axios.put(
           `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateOrder`,
@@ -503,7 +556,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
             },
           }
         );
-        window.location.reload()
+        window.location.reload();
       } catch (error) {
         console.log(error, "Error");
       }
@@ -593,12 +646,47 @@ const NewOrders = ({ orderData, setIsEdit }) => {
               />
             </Form.Group>
           </Form>
+          <div className="text-center mt-3">
+            <h5
+              className=""
+              style={{ color: "red", fontSize: 18, fontWeight: 700 }}
+            >
+              {error}
+            </h5>
+          </div>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-start">
           <button
             type="button"
             className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-            onClick={handleNext}
+            onClick={async () => {
+              try {
+                if (caseNumber?.length <= 0) {
+                  setError("Please enter a case number.");
+                } else {
+                  const response = await axios.get(
+                    `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getOrderByTrackingNo?trackingNumber=${caseNumber}&&value=2`,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                          "token"
+                        )}`,
+                      },
+                    }
+                  );
+                  if (response?.data?.data?.length == 0 || orderData?._id?.length >0) {
+                    handleNext();
+                  }
+                  else {
+                    setError(`Case Number ${caseNumber} is already in use.`);
+                  }
+                  // setLoading(false)
+                }
+              } catch (error) {
+                // setLoading(false)
+                console.log(error, "Error");
+              }
+            }}
           >
             <div className="button-container">
               <span>Next</span>
@@ -634,6 +722,14 @@ const NewOrders = ({ orderData, setIsEdit }) => {
             <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
               {caseNumber}
             </p>
+          </div>
+          <div className="text-center mt-3">
+            <h5
+              className=""
+              style={{ color: "red", fontSize: 18, fontWeight: 700 }}
+            >
+              {error}
+            </h5>
           </div>
           <Form>
             <SecondModal formData={formData} handleChange={handleChange} />
@@ -687,6 +783,14 @@ const NewOrders = ({ orderData, setIsEdit }) => {
             <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
               {caseNumber}
             </p>
+          </div>
+          <div className="text-center mt-3">
+            <h5
+              className=""
+              style={{ color: "red", fontSize: 18, fontWeight: 700 }}
+            >
+              {error}
+            </h5>
           </div>
           <Form>
             <ThirdModal
@@ -817,27 +921,29 @@ const NewOrders = ({ orderData, setIsEdit }) => {
             </p>
             <button
               type="button"
-              className="mr-4 btn btn-icon m-1 btn-sm display-6 create-user-button"
-              onClick={() => {
-                setShowConfirmModal(false);
-                setShowConfirmReleasedModal(true);
-              }}
+              className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+              onClick={() => handleSubmit("unreleased")}
+              style={{ backgroundColor: "#dd3333" }}
             >
               <div className="button-container" style={{ fontSize: 12 }}>
                 <span>
-                  Release Order to <br />
-                  Service Center NOW
+                  Release Order to <br /> Service Center LATER
                 </span>
               </div>
             </button>
             <button
               type="button"
-              className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-              onClick={() => handleSubmit("unreleased")}
+              className="mr-4 btn btn-icon m-1 btn-sm display-6 create-user-button"
+              onClick={() => {
+                setShowConfirmModal(false);
+                setShowConfirmReleasedModal(true);
+              }}
+              style={{ backgroundColor: "green" }}
             >
               <div className="button-container" style={{ fontSize: 12 }}>
                 <span>
-                  Release Order to <br /> Service Center LATER
+                  Release Order to <br />
+                  Service Center NOW
                 </span>
               </div>
             </button>

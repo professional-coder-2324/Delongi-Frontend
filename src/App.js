@@ -15,7 +15,7 @@ import Dashboard from "./Components/Dashboard";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import Logo from "./Assets/logo.png";
+import Logo from "./Assets/delonghi.svg";
 import axios from "axios";
 import OrderStatus from "./Components/OrderStatus";
 import Service1Component from "./Components/Service1Component";
@@ -34,6 +34,7 @@ import PartEdit from "./Components/PartEdit";
 import OnAndOffBoard from "./Components/OnAndOffBoard";
 import Settings from "./Components/Settings";
 import Receipt from "./Components/Receipt";
+import TrashedOrders from "./Components/TrashedOrder";
 const isAuthenticated = !!localStorage.getItem("token");
 
 function App() {
@@ -64,7 +65,7 @@ function App() {
       }
     };
 
-    fetchData();
+    token && fetchData();
   }, [token]);
   function getComponentForRoute(routeName) {
     console.log(routeName, "fsdfhgdshf");
@@ -73,7 +74,7 @@ function App() {
       users: DatatablePage,
       newOrder: NewOrders,
       orderStatus: OrderStatus,
-      releasedOrder: ReleasedOrders,
+      releaseOrder: ReleasedOrders,
       unreleasedOrders: UnReleasedOrders,
       dataFiles: DataFiles,
       boxShipments: BoxShipments,
@@ -85,7 +86,8 @@ function App() {
       partManagement: PartManagement,
       board: OnAndOffBoard,
       settings: Settings,
-      people: DatatablePage
+      people: DatatablePage,
+      trashed: TrashedOrders
       // Define other mappings as needed
     }[routeName];
   }

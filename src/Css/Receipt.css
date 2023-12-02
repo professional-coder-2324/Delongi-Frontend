@@ -3,12 +3,7 @@
   gap: 5px;
   justify-content: flex-start;
 }
-.gap-2 {
-  gap: 10px;
-}
-.gap-3 {
-  gap: 20px;
-}
+
 .details-info {
   display: flex;
   gap: 10px;

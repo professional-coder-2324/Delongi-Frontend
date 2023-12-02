@@ -16,11 +16,16 @@
   background: #fff;
   z-index: 100;
 }
+.top-nav img {
+  width: 150px;
+  height: auto;
+  margin-left: 20px;
+}
 
 .nav-toggle-button {
-  margin-left: 200px;
-  display: flex;
-  align-items: center;
+  /* margin-left: 200px; */
+  /* display: flex;
+  align-items: center; */
   background-color: transparent;
   border: none;
   color: #fff;
@@ -40,7 +45,7 @@
 .navbar {
   display: none;
   width: 0;
-  height: 100%;
+  height: calc(100vh - 60px);
   overflow-x: hidden;
   z-index: 90;
   transition: left 0.24s ease-in-out;

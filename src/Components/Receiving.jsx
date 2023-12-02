@@ -242,16 +242,27 @@ const Receiving = () => {
       ),
       process: (
         <div>
-          <button
+          {/* <button
             className="action-button"
             onClick={() => {
-              setOrderData(userData)
-              setReceiving(true)
             }}
             style={{background:"white", border:"none", cursor: userData.status !== "boxShipped" ? "not-allowed":"pointer"}}
             disabled={userData.status !== "boxShipped"}
           >
          <i class="fa-regular fa-clone fa-xl" style={{color: "#10b981", opacity:userData.status !== "boxShipped" ? 0.4 : 1 }}></i>
+          </button> */}
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() => {
+              setOrderData(userData)
+              setReceiving(true)
+            }}
+            disabled={userData.status !== "boxShipped"}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>Continue</span>
+            </div>
           </button>
         </div>
       ),
@@ -293,7 +304,7 @@ const Receiving = () => {
           {Receiving && <ReceiveModals key={Receiving} orderData={orderData} id={orderData.id} setLoading={setLoading} ReceivingModal={Receiving} setReceivingModal={setReceiving} setStatus={setStatus}/>}
           <Modal
             show={receivingModal}
-            // onHide={() => setReceivingModal(false)}
+            onHide={() => setReceivingModal(false)}
             className="case-number-modal"
             backdrop="static"
             keyboard={false}
@@ -303,7 +314,7 @@ const Receiving = () => {
               <button className="btn bg-transparent close-button">
                 <i
                   className="fa-solid text-25 fa-xmark"
-                  //   onClick={() => setReceivingModal(false)}
+                    onClick={() => setReceivingModal(false)}
                 ></i>
               </button>
             </Modal.Header>

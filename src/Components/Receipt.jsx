@@ -1,5 +1,5 @@
 import { Col, Form, Row } from "react-bootstrap";
-import Logo from "../Assets/logo.png";
+import Logo from "../Assets/delonghi.svg";
 import "../Css/Receipt.css";
 import { formatDate } from "./BoxShipment";
 import { useState } from "react";
