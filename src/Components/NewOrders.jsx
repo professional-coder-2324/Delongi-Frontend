@@ -150,6 +150,21 @@ export const ThirdModal = ({
         <Col>
           <Form.Group>
             <Form.Label>Model</Form.Label>
+            {/* <Form.Control
+              as="select"
+              name="model"
+              value={formData.model}
+              onChange={(e) => {
+                handleModelChange(e.target.value);
+              }}
+              disabled={disabled}
+            >
+              {models.map((model, index) => (
+                <option value={model} key={index}>
+                  {model}
+                </option>
+              ))}
+            </Form.Control> */}
             <Form.Control
               as="select"
               name="model"
@@ -197,12 +212,13 @@ export const ThirdModal = ({
       <Row className="mb-2">
         <Col md={6} sm={12}>
           <Form.Group>
-            <Form.Label>Serial Number</Form.Label>
+            <Form.Label>SAP Code</Form.Label>
             <Form.Control
               type="text"
-              name="serialNumber"
-              value={formData.serialNumber}
+              name="SAPCode"
+              value={formData.SAPCode}
               onChange={handleChange}
+              readOnly
               disabled={disabled}
             />
           </Form.Group>
@@ -224,13 +240,13 @@ export const ThirdModal = ({
       <Row className="mb-2">
         <Col>
           <Form.Group>
-            <Form.Label>SAP Code</Form.Label>
+            <Form.Label>Serial Number</Form.Label>
             <Form.Control
               type="text"
-              name="SAPCode"
-              value={formData.SAPCode}
+              name="serialNumber"
+              value={formData.serialNumber}
               onChange={handleChange}
-              // disabled={disabled}
+              disabled={disabled}
             />
           </Form.Group>
         </Col>
@@ -253,7 +269,7 @@ export const ThirdModal = ({
                   {name}
                 </option>
               ))} */}
-              <Form.Control
+            <Form.Control
               type="text"
               name="retailerName"
               value={formData.retailerName}
@@ -327,7 +343,7 @@ export const ThirdModal = ({
             </div>
           </Form.Group>
         </Col>
-        <Col md={6} sm={12}>
+        {/* <Col md={6} sm={12}>
           <Form.Group>
             <Form.Label>Box Required from BATES</Form.Label>
             <div className="d-flex align-items-center" style={{ gap: 12 }}>
@@ -351,7 +367,7 @@ export const ThirdModal = ({
               />
             </div>
           </Form.Group>
-        </Col>
+        </Col> */}
       </Row>
     </>
   );
@@ -373,6 +389,10 @@ const NewOrders = ({ orderData, setIsEdit }) => {
   const [showThirdModal, setShowThirdModal] = useState(false);
   const [showFinalModal, setShowFinalModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  // const [showBates, setShowConfirmModal] = useState(false);
+  const [showBATES, setShowBATES] = useState(false);
+  const [excelData, setExcelData] = useState([]);
+  // const [models, setModels] = useState(["Select Model"]);
   const [showConfirmReleasedModal, setShowConfirmReleasedModal] =
     useState(false);
   useEffect(() => {
@@ -399,8 +419,44 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     // reasonCode: "",
     inWarranty: true,
     boxRequired: true,
-    SAPCode:""
+    SAPCode: "",
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getExcleFiledata`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        setExcelData(response.data.data);
+        // setLoading(false)
+      } catch (error) {
+        // setLoading(false)
+        console.log(error, "Error");
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(excelData, "excell");
+  // const handleModelChange = (selectedModel) => {
+  //   // Fetch relevant data based on selected model from Excel data
+  //   const selectedRow = excelData.find(item => item.model === selectedModel);
+  //   if (selectedRow) {
+  //     const { category, brand, SAPCode } = selectedRow;
+  //     setFormData({
+  //       ...formData,
+  //       model: selectedModel,
+  //       category,
+  //       brand,
+  //       SAPCode,
+  //       // Other form fields remain unchanged
+  //     });
+  //   }
+  // };
   useEffect(() => {
     if (showNewOrdersModal && orderData) {
       openNewOrdersModal();
@@ -436,28 +492,35 @@ const NewOrders = ({ orderData, setIsEdit }) => {
       }
     } else if (currentStep === 3) {
       if (
-        formData.model.length <= 0 ||
-        formData.brand.length <= 0 ||
-        formData.category.length <= 0 ||
-        formData.serialNumber.length <= 0 ||
-        formData.retailerName.length <= 0 ||
-        formData.dateOfPurchase.length <= 0 ||
-        formData.defectReported.length <= 0 ||
-        formData.reasonCode.length <= 0 ||
-        formData.inWarranty.length <= 0 ||
-        formData.boxRequired.length <= 0
+        formData.model?.length <= 0 ||
+        formData.brand?.length <= 0 ||
+        formData.category?.length <= 0 ||
+        formData.serialNumber?.length <= 0 ||
+        formData.retailerName?.length <= 0 ||
+        formData.dateOfPurchase?.length <= 0 ||
+        formData.defectReported?.length <= 0 ||
+        formData.reasonCode?.length <= 0 ||
+        formData.inWarranty?.length <= 0 
+        // formData.boxRequired.length <= 0
       ) {
         setError("Please Enter All Details.");
       } else {
         // Save data from the second modal
-        setShowFinalModal(true);
+        // setShowFinalModal(true);
+        setShowBATES(true);
         setShowThirdModal(false);
         setCurrentStep(4);
       }
     } else if (currentStep === 4) {
       // Save data from the second modal
+      setShowBATES(false);
       setShowConfirmModal(true);
       setShowFinalModal(false);
+      setCurrentStep(5);
+    }
+    else if (currentStep ===5) {
+      setShowFinalModal(true);
+      setShowConfirmModal(false);
       setCurrentStep(5);
     }
   };
@@ -484,19 +547,19 @@ const NewOrders = ({ orderData, setIsEdit }) => {
       setCurrentStep(4);
     }
   };
-  const [models] = useState(["Select Model", "Model A", "Model B", "Model C"]);
-  const [categories] = useState({
-    "Select Model": [""],
-    "Model A": ["Category 1"],
-    "Model B": ["Category 2"],
-    "Model C": ["Category 3"],
-  });
-  const [brands] = useState({
-    "Select Model": [""],
-    "Model A": ["Brand 1"],
-    "Model B": ["Brand 2"],
-    "Model C": ["Brand 3"],
-  });
+  // const [models] = useState(["Select Model", "Model A", "Model B", "Model C"]);
+  // const [categories] = useState({
+  //   "Select Model": [""],
+  //   "Model A": ["Category 1"],
+  //   "Model B": ["Category 2"],
+  //   "Model C": ["Category 3"],
+  // });
+  // const [brands] = useState({
+  //   "Select Model": [""],
+  //   "Model A": ["Brand 1"],
+  //   "Model B": ["Brand 2"],
+  //   "Model C": ["Brand 3"],
+  // });
   const [retailerNames] = useState([
     "Select Retailer Name",
     "Retailer 1",
@@ -509,6 +572,14 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     "Reason Code 2",
     "Reason Code 3",
   ]);
+  const [models, setModels] = useState(["Select Model"]); // Include default value
+
+  useEffect(() => {
+    // Extract unique models from Excel data
+    const uniqueModels = ["Select Model", ...new Set(excelData.map((item) => item.Model))];
+    setModels(uniqueModels);
+  }, [excelData]);
+
 
   const handleCloseCaseModal = () => {
     setShowCaseModal(false);
@@ -523,15 +594,15 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     setShowCaseModal(false); // Close the case modal
   };
 
-  const handleModelChange = (selectedModel) => {
-    // Set the selected model, category, and brand to formData
-    setFormData({
-      ...formData,
-      model: selectedModel,
-      category: categories[selectedModel][0],
-      brand: brands[selectedModel][0],
-    });
-  };
+  // const handleModelChange = (selectedModel) => {
+  //   // Set the selected model, category, and brand to formData
+  //   setFormData({
+  //     ...formData,
+  //     model: selectedModel,
+  //     category: categories[selectedModel][0],
+  //     brand: brands[selectedModel][0],
+  //   });
+  // };
   const handleSubmit = async (orderStatus) => {
     setShowConfirmReleasedModal(false);
     setShowConfirmModal(false);
@@ -541,7 +612,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
 
     const data = {
       ...formData,
-      status: orderStatus,
+      status: formData?.boxRequired ? orderStatus : "e-label",
       caseNumber: caseNumber,
     };
     if (id) {
@@ -597,6 +668,22 @@ const NewOrders = ({ orderData, setIsEdit }) => {
     }
   };
 
+  const handleModelChange = (selectedModel) => {
+    // Fetch the selected row based on the chosen model
+    const selectedRow = excelData.find((item) => item.Model === selectedModel);
+
+    if (selectedRow) {
+      const { Category, SAP, Brand } = selectedRow;
+      setFormData({
+        ...formData,
+        model: selectedModel,
+        category: Category,
+        brand: Brand,
+        SAPCode: SAP,
+        // Other form fields remain unchanged
+      });
+    }
+  };
   return (
     <div className="your-component">
       {!id && (
@@ -674,10 +761,12 @@ const NewOrders = ({ orderData, setIsEdit }) => {
                       },
                     }
                   );
-                  if (response?.data?.data?.length == 0 || orderData?._id?.length >0) {
+                  if (
+                    response?.data?.data?.length == 0 ||
+                    orderData?._id?.length > 0
+                  ) {
                     handleNext();
-                  }
-                  else {
+                  } else {
                     setError(`Case Number ${caseNumber} is already in use.`);
                   }
                   // setLoading(false)
@@ -998,6 +1087,73 @@ const NewOrders = ({ orderData, setIsEdit }) => {
           >
             <div className="button-container" style={{ fontSize: 12 }}>
               <span>Confirm</span>
+            </div>
+          </button>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={showBATES}
+        onHide={() => setShowBATES(false)}
+        className="confirm-status-modal"
+        backdrop="static"
+        keyboard={false}
+      >
+        <Modal.Header>
+          <Modal.Title>Confirmation</Modal.Title>
+          <button className="btn bg-transparent close-button">
+            <i
+              className="fa-solid text-25 fa-xmark"
+              onClick={() => {
+                setShowBATES(false);
+                handleCloseCaseModal();
+              }}
+            ></i>
+          </button>
+        </Modal.Header>
+        <Modal.Body>
+          {/* <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
+              Case Number
+            </Form.Label>
+            <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 20 }}>
+              {caseNumber}
+            </p> */}
+          <p style={{ textAlign: "center", fontSize: 17, fontWeight: 400 }}>
+            Release Box Picking Order to Service Center
+          </p>
+          {/* <button
+              type="button"
+              className="mr-4 btn btn-icon m-1 btn-sm display-6 create-user-button"
+              onClick={handleBack}
+            >
+              <div className="button-container" style={{fontSize:12}}>
+                <span>
+                  Release Order to <br />
+                  Service Center NOW
+                </span>
+              </div>
+            </button> */}
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() => {
+              setFormData({ ...formData, boxRequired: true });
+              setShowFinalModal(true);
+            }}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>Yes</span>
+            </div>
+          </button>
+          <button
+            type="button"
+            className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+            onClick={() => {
+              setFormData({ ...formData, boxRequired: false });
+              setShowFinalModal(true);
+            }}
+          >
+            <div className="button-container" style={{ fontSize: 12 }}>
+              <span>No</span>
             </div>
           </button>
         </Modal.Body>
