@@ -45,8 +45,203 @@ const BoxShipmentModals = ({
   //     }
   //   };
   const handleStatusSubmit = async (status) => {
-    // setLoading(true);
+    setLoading(true);
     try {
+      const UserBody = {
+        "labelResponseOptions": "URL_ONLY",
+        "requestedShipment": {
+          "shipper": {
+            "contact": {
+              "personName": "Krupal Jada",
+              "phoneNumber": 1234567890,
+              "companyName": "JKV"
+            },
+            "address": {
+              "streetLines": [
+                "SHIPPER STREET LINE 1"
+              ],
+              "city": "HARRISON",
+              "stateOrProvinceCode": "AR",
+              "postalCode": 72601,
+              "countryCode": "US"
+            }
+          },
+          "recipients": [
+            {
+              "contact": {
+                "personName": "Deloghi",
+                "phoneNumber": 1234567890,
+                "companyName": "Delonghi"
+              },
+              "address": {
+                "streetLines": [
+                  "RECIPIENT STREET LINE 1",
+                  "RECIPIENT STREET LINE 2"
+                ],
+                "city": "Collierville",
+                "stateOrProvinceCode": "TN",
+                "postalCode": 38017,
+                "countryCode": "US"
+              }
+            }
+          ],
+          "shipDatestamp": "2023-12-25",
+          "serviceType": "PRIORITY_OVERNIGHT",
+          "packagingType": "FEDEX_ENVELOPE",
+          "pickupType": "USE_SCHEDULED_PICKUP",
+          "blockInsightVisibility": false,
+          "shippingChargesPayment": {
+            "paymentType": "SENDER"
+          },
+          "shipmentSpecialServices": {
+            "specialServiceTypes": [
+              "RETURN_SHIPMENT"
+            ],
+            "returnShipmentDetail": {
+              "returnType": "PRINT_RETURN_LABEL"
+            }
+          },
+          "labelSpecification": {
+            "imageType": "ZPLII",
+            "labelStockType": "PAPER_85X11_TOP_HALF_LABEL"
+          },
+          "requestedPackageLineItems": [
+            {
+              "weight": {
+                "value": 1,
+                "units": "LB"
+              }
+            }
+          ]
+        },
+        "accountNumber": {
+          "value": "985798579857"
+        }
+      };
+      const CompanyBody = {
+        "labelResponseOptions": "URL_ONLY",
+        "requestedShipment": {
+          "shipper": {
+            "contact": {
+              "personName": "ABC 1",
+              "phoneNumber": 1234567890,
+              "companyName": "Shipper Company Name"
+            },
+            "address": {
+              "streetLines": [
+                "SHIPPER STREET LINE 1"
+              ],
+              "city": "HARRISON",
+              "stateOrProvinceCode": "AR",
+              "postalCode": 72601,
+              "countryCode": "US"
+            }
+          },
+          "recipients": [
+            {
+              "contact": {
+                "personName": "DEF 23",
+                "phoneNumber": 1234567890,
+                "companyName": "Recipient Company Name"
+              },
+              "address": {
+                "streetLines": [
+                  "RECIPIENT STREET LINE 1",
+                  "RECIPIENT STREET LINE 2"
+                ],
+                "city": "Collierville",
+                "stateOrProvinceCode": "TN",
+                "postalCode": 38017,
+                "countryCode": "US"
+              }
+            }
+          ],
+          "shipDatestamp": "2020-07-03",
+          "serviceType": "PRIORITY_OVERNIGHT",
+          "packagingType": "FEDEX_ENVELOPE",
+          "pickupType": "USE_SCHEDULED_PICKUP",
+          "blockInsightVisibility": false,
+          "shippingChargesPayment": {
+            "paymentType": "SENDER"
+          },
+          "shipmentSpecialServices": {
+            "specialServiceTypes": [
+              "RETURN_SHIPMENT"
+            ],
+            "returnShipmentDetail": {
+              "returnType": "PRINT_RETURN_LABEL"
+            }
+          },
+          "labelSpecification": {
+            "imageType": "ZPLII",
+            "labelStockType": "PAPER_85X11_TOP_HALF_LABEL"
+          },
+          "requestedPackageLineItems": [
+            {
+              "weight": {
+                "value": 1,
+                "units": "LB"
+              }
+            }
+          ]
+        },
+        "accountNumber": {
+          "value": "1234556789"
+        }
+      };
+     
+      let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
+      const encodedLabel = firstLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
+
+      let secondLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, UserBody)
+      const encodedLabel2 = secondLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
+
+      // Create a new iframe
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+
+      // Set the content of the iframe to an HTML document with both image tags
+      iframe.srcdoc = `
+        <html>
+          <head>
+            <style>
+              body {
+                margin: 0;
+                transform: rotate(0deg); /* Use 270deg for landscape orientation */
+                transform-origin: left top;
+              }
+              img {
+                width: 100%;
+                height: auto;
+                max-width: 100vw;
+                max-height: 90vh; /* Adjust this value as needed */
+              }
+            </style>
+          </head>
+          <body>
+            <img src="data:image/png;base64,${encodedLabel}" />
+            <img src="data:image/png;base64,${encodedLabel2}" />
+          </body>
+        </html>
+      `;
+
+      // Append the iframe to the body
+      document.body.appendChild(iframe);
+
+      // Once the iframe is loaded, trigger the print dialog
+      iframe.onload = function () {
+        iframe.contentWindow.print();
+          setLoading(false);
+      };
+
+      // Optionally, remove the iframe after printing
+      iframe.onafterprint = function () {
+        document.body.removeChild(iframe);
+      };
+
+
+
+
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateBoxshipment`,
         {
@@ -60,7 +255,6 @@ const BoxShipmentModals = ({
           },
         }
       );
-      //   setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error, "Error");
