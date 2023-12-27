@@ -123,6 +123,7 @@ const Receiving = () => {
   const userAttributes = [];
   filteredData.forEach((el) => {
     userAttributes.push({
+      ...el,
       firstName: el.firstName,
       lastName: el.lastName,
       caseNumber: el.caseNumber,

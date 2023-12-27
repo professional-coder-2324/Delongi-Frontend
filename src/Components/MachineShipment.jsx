@@ -7,16 +7,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Modal } from "react-bootstrap";
 import Barcode from "../Assets/barcode.png";
 import RepairModals from "./RepairModal";
-const Repairs = () => {
+const MachineShipment = () => {
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
-  const [repairs, setRepairs] = useState(false);
-  const [status, setStatus] = useState("");
-  const [parts, setParts] = useState([])
-
+  const [shipmentModal, setShipmentModal] = useState(false);
   const [orderData, setOrderData] = useState([]);
   // const formatDate = (dateString) => {
   //   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -36,7 +33,7 @@ const Repairs = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getReceivedOrders`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getRepairedOrders?status=repaired`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -52,53 +49,145 @@ const Repairs = () => {
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    setLoading(true);
-    const fetchData = async () => {
+    const handleSubmit = async (type) => {
+      // setLoading(true)
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/part/getParts`,
+        const CompanyBody = {
+          "labelResponseOptions": "URL_ONLY",
+          "requestedShipment": {
+            "shipper": {
+              "contact": {
+                "personName": "ABC 1",
+                "phoneNumber": 1234567890,
+                "companyName": "Shipper Company Name"
+              },
+              "address": {
+                "streetLines": [
+                  "SHIPPER STREET LINE 1"
+                ],
+                "city": "HARRISON",
+                "stateOrProvinceCode": "AR",
+                "postalCode": 72601,
+                "countryCode": "US"
+              }
+            },
+            "recipients": [
+              {
+                "contact": {
+                  "personName": "DEF 23",
+                  "phoneNumber": 1234567890,
+                  "companyName": "Recipient Company Name"
+                },
+                "address": {
+                  "streetLines": [
+                    "RECIPIENT STREET LINE 1",
+                    "RECIPIENT STREET LINE 2"
+                  ],
+                  "city": "Collierville",
+                  "stateOrProvinceCode": "TN",
+                  "postalCode": 38017,
+                  "countryCode": "US"
+                }
+              }
+            ],
+            "shipDatestamp": "2020-07-03",
+            "serviceType": "PRIORITY_OVERNIGHT",
+            "packagingType": "FEDEX_ENVELOPE",
+            "pickupType": "USE_SCHEDULED_PICKUP",
+            "blockInsightVisibility": false,
+            "shippingChargesPayment": {
+              "paymentType": "SENDER"
+            },
+            "shipmentSpecialServices": {
+              "specialServiceTypes": [
+                "RETURN_SHIPMENT"
+              ],
+              "returnShipmentDetail": {
+                "returnType": "PRINT_RETURN_LABEL"
+              }
+            },
+            "labelSpecification": {
+              "imageType": "ZPLII",
+              "labelStockType": "PAPER_85X11_TOP_HALF_LABEL"
+            },
+            "requestedPackageLineItems": [
+              {
+                "weight": {
+                  "value": 1,
+                  "units": "LB"
+                }
+              }
+            ]
+          },
+          "accountNumber": {
+            "value": "1234556789"
+          }
+        };
+       
+        let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
+        const encodedLabel = firstLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
+
+  
+        // Create a new iframe
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+  
+        // Set the content of the iframe to an HTML document with both image tags
+        iframe.srcdoc = `
+          <html>
+            <head>
+              <style>
+                body {
+                  margin: 0;
+                  transform: rotate(0deg); /* Use 270deg for landscape orientation */
+                  transform-origin: left top;
+                }
+                img {
+                  width: 100%;
+                  height: auto;
+                  max-width: 100vw;
+                  max-height: 90vh; /* Adjust this value as needed */
+                }
+              </style>
+            </head>
+            <body>
+              <img src="data:image/png;base64,${encodedLabel}" />
+            </body>
+          </html>
+        `;
+  
+        // Append the iframe to the body
+        document.body.appendChild(iframe);
+  
+        // Once the iframe is loaded, trigger the print dialog
+        iframe.onload = function () {
+          iframe.contentWindow.print();
+            setLoading(false);
+        };
+  
+        // Optionally, remove the iframe after printing
+        iframe.onafterprint = function () {
+          document.body.removeChild(iframe);
+        };
+         await axios.put(
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateOrderStatus`,
+          {
+            orderId: orderData.id,
+            status: "shipped"
+          },
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
-        );
-        setParts(response.data.data);
-        setLoading(false);
+        ).then(()=>{
+          navigate('/machineShipped')
+        });
       } catch (error) {
-        setLoading(false);
+        // setLoading(false)
         console.log(error, "Error");
       }
     };
-    fetchData();
-  }, []);
-  //   const handleSubmit = async (type) => {
-  //     // setLoading(true)
-  //     try {
-  //       const response = await axios.get(
-  //         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getOrderByTrackingNo?trackingNumber=${trackingNo}&&value=${type}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //           },
-  //         }
-  //       );
-  //       if (response?.data?.data?.length > 0) {
-  //         setRows(response.data.data);
-  //         setBarcodeModal(false)
-  //         setReceivingMoListdal(false)
-  //         setIsSearchSelection(false)
-  //       } else {
-  //         console.log("fdfdfdfdf");
-  //         setError("Not Found!");
-  //       }
-  //       // setLoading(false)
-  //     } catch (error) {
-  //       // setLoading(false)
-  //       console.log(error, "Error");
-  //     }
-  //   };
 
   const userAttributes = [];
   filteredData.forEach((el) => {
@@ -163,7 +252,7 @@ const Repairs = () => {
         sort: "asc",
         width: 270,
       },
-      location.pathname.includes("/repairs") && {
+      {
         label: "Action",
         field: "process",
         sort: "none",
@@ -177,7 +266,7 @@ const Repairs = () => {
         width: 100,
         className: "actions-column",
       },
-    ].filter(Boolean),
+    ],
 
     rows: userAttributes.map((userData) => ({
       ...userData,
@@ -226,7 +315,7 @@ const Repairs = () => {
           </button>
         </div>
       ),
-      process:location.pathname.includes("/repairs") && (
+      process: (
         <div>
           {/* <button
             className="action-button"
@@ -255,9 +344,9 @@ const Repairs = () => {
             className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
             onClick={() => {
               setOrderData(userData);
-              setRepairs(true);
+              setShipmentModal(true);
             }}
-            disabled={userData.status !== "received"}
+            // disabled={userData.status !== "received"}
           >
             <div className="button-container" style={{ fontSize: 12 }}>
               <span>Continue</span>
@@ -278,7 +367,7 @@ const Repairs = () => {
       {!loading && (
         <>
           <div>
-            <h2 className="pb-2 title-user">{location.pathname.includes("/repairs")? "Repairs": "Receiving List"}</h2>
+            <h2 className="pb-2 title-user">Machine Shipments</h2>
             {/* ... Your search and filter buttons ... */}
             <div class="service-component">
               <div class="global-search mt-4 mb-3">
@@ -300,22 +389,57 @@ const Repairs = () => {
             </div>
           </div>
           <MDBDataTable data={data} noBottomColumns />
-          {repairs && (
-            <RepairModals
-              key={repairs}
-              orderData={orderData}
-              id={orderData.id}
-              setLoading={setLoading}
-              RepairModal={repairs}
-              setRepairModal={setRepairs}
-              setStatus={setStatus}
-              parts={parts}
-            />
-          )}
+          { 
+             <Modal
+             show={shipmentModal}
+             onHide={() => setShipmentModal(false)}
+             className="confirm-status-modal"
+             backdrop="static"
+             keyboard={false}
+           >
+             <Modal.Header>
+               <Modal.Title>Shipment Confirmation</Modal.Title>
+             </Modal.Header>
+             <Modal.Body>
+               <div className="text-center">
+                 <Form.Label style={{ fontSize: 15, fontWeight: 600, margin: 0 }}>
+                  Are you sure you want to ship this shipment
+                 </Form.Label>
+                 <p style={{ fontSize: 20, fontWeight: 900, marginBottom: 10 }}>
+                   {orderData?.caseNumber}
+                 </p>
+               </div>
+             </Modal.Body>
+             <Modal.Footer className="d-flex justify-content-between border-0">
+              <div>
+                <button
+                  type="button"
+                  className="mr-4 btn btn-icon m-1 btn-sm cancel-user-button"
+                  onClick={() => {
+                    setShipmentModal(false);
+                  }}
+                >
+                  <div className="button-container">
+                    <span>No</span>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
+                  onClick={handleSubmit}
+                >
+                  <div className="button-container">
+                    <span>Yes</span>
+                  </div>
+                </button>
+              </div>
+            </Modal.Footer>
+           </Modal>
+        }
         </>
       )}
     </>
   );
 };
 
-export default Repairs;
+export default MachineShipment;

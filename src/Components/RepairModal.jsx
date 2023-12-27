@@ -12,6 +12,7 @@ const RepairModals = ({
   RepairModal,
   setRepairModal,
   setStatus,
+  parts
 }) => {
   console.log(orderData, "orderrrr");
   const [Repair, setRepair] = useState(RepairModal);
@@ -60,6 +61,7 @@ const RepairModals = ({
     "Repair Code 2",
     "Repair Code 3",
   ]);
+ 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     console.log(type, value, checked, "Fdfdfdf");
@@ -96,6 +98,7 @@ const RepairModals = ({
     }
 
     try {
+      console.log(partNo,"dssdsdsds");
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}/api/part/getPartsBySearch?searchValue=${partNo}`,
         {
@@ -212,8 +215,8 @@ const RepairModals = ({
             onClick={() => {
               // handleShow();
               setInputParts(true);
-              setPartNo(userData.partNumber)
-              setQty(userData.quantity)
+              setPartNo(userData.partNumber);
+              setQty(userData.quantity);
               setPartEdit(userData);
               // console.log(userData, "userrr");
             }}
@@ -221,16 +224,16 @@ const RepairModals = ({
             <i className="fa-solid fa-pencil"></i>
           </button>
           <button
-              className="delete-button-parts border"
-              onClick={() => {
-                setDeleteId(userData._id)
-                setIsDelete(true)
-                // setShowDeleteModal(true);
-                // setDeleteId(userData.id);
-              }}
-            >
-              <i className="fa-solid text-25 fa-trash"></i>
-            </button>
+            className="delete-button-parts border"
+            onClick={() => {
+              setDeleteId(userData._id);
+              setIsDelete(true);
+              // setShowDeleteModal(true);
+              // setDeleteId(userData.id);
+            }}
+          >
+            <i className="fa-solid text-25 fa-trash"></i>
+          </button>
         </div>
       ),
     })),
@@ -344,6 +347,7 @@ const RepairModals = ({
       console.log(error, "Error");
     }
   };
+
   console.log(getVerifiedData(), "fddfhdgfhdhbnju");
   return (
     <>
@@ -822,10 +826,18 @@ const RepairModals = ({
             <Form.Group controlId="partNO">
               <Form.Label>Part No or Description</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 value={partNo}
                 onChange={(e) => setPartNo(e.target.value)}
-              />
+              >
+                <option value="">Select Part No or Description</option>
+                {parts.map((data)=>
+                <option value={data.partNumber}>{
+                  data.partNumber + " - " + data.description
+                }</option>
+              )}
+                {/* Add more options as needed */}
+              </Form.Control>
             </Form.Group>
             <Form.Group controlId="qty" className="mt-3">
               <Form.Label>Quanitity</Form.Label>

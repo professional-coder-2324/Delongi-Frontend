@@ -35,6 +35,9 @@ import OnAndOffBoard from "./Components/OnAndOffBoard";
 import Settings from "./Components/Settings";
 import Receipt from "./Components/Receipt";
 import TrashedOrders from "./Components/TrashedOrder";
+import MachineShipment from "./Components/MachineShipment";
+import MachineShipped from "./Components/MachineShipped";
+import Search from "./Components/Search";
 const isAuthenticated = !!localStorage.getItem("token");
 
 function App() {
@@ -87,7 +90,10 @@ function App() {
       board: OnAndOffBoard,
       settings: Settings,
       people: DatatablePage,
-      trashed: TrashedOrders
+      trashed: TrashedOrders,
+      machineShipments: MachineShipment,
+      machineShipped: MachineShipped,
+      search: Search
       // Define other mappings as needed
     }[routeName];
   }

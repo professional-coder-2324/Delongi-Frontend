@@ -1066,7 +1066,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
               {caseNumber}
             </p> */}
           <p style={{ textAlign: "center", fontSize: 17, fontWeight: 400 }}>
-            Release Box Picking Order to Service Center
+          Box Picking has been released to Service Center
           </p>
           {/* <button
               type="button"
@@ -1099,7 +1099,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
         keyboard={false}
       >
         <Modal.Header>
-          <Modal.Title>Confirmation</Modal.Title>
+          <Modal.Title>Box Picking</Modal.Title>
           <button className="btn bg-transparent close-button">
             <i
               className="fa-solid text-25 fa-xmark"
@@ -1139,6 +1139,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
               setFormData({ ...formData, boxRequired: true });
               setShowFinalModal(true);
             }}
+            style={{ backgroundColor:"green" }}
           >
             <div className="button-container" style={{ fontSize: 12 }}>
               <span>Yes</span>
@@ -1151,6 +1152,7 @@ const NewOrders = ({ orderData, setIsEdit }) => {
               setFormData({ ...formData, boxRequired: false });
               setShowFinalModal(true);
             }}
+            style={{ backgroundColor:"#dd3333" }}
           >
             <div className="button-container" style={{ fontSize: 12 }}>
               <span>No</span>

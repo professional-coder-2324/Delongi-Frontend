@@ -83,14 +83,16 @@ export const tabData = {
     dataFiles: true,
     search: false,
   },
-  administration: {
-    search: false,
+  Administration: {
+    search: true,
   },
   ACS: {
     boxShipments: true,
     receiving: true,
     receivingList: true,
     repairs: true,
+    machineShipments: true,
+    machineShipped: true,
     trashed: true,
     partManagement: true,
     logs: true,
@@ -99,7 +101,6 @@ export const tabData = {
     // partManagement: true,
     fedExMenu: false,
     refurbishment: false,
-    machineShipments: false,
     search: false,
   },
   SuperAdmin: {
@@ -135,6 +136,7 @@ const tabDisplayNames = {
   fedExMenu: "FedEx Menu",
   refurbishment: "Refurbishment",
   machineShipments: "Machine Shipments",
+  machineShipped: "Machine Shipped",
   repairs: "Repairs",
   receiving: "Receiving",
   boxShipments: "Box Shipments",
@@ -177,6 +179,7 @@ function Navbar({ user, isNavOpen, setIsNavOpen }) {
     Settings: Settings,
     "Box Shipments": BoxShipments,
     Receiving: Receiving,
+    
 
     // Add other service components
   };

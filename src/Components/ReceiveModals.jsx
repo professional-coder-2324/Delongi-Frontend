@@ -38,12 +38,14 @@ const ReceiveModals = ({ orderData, id, setOrderData , setLoading, ReceivingModa
       );
       setOrderData(response.data.data);
       setLoading(false);
+      window.location.reload()
       // navigate(`${path.length > 0 ? path : "/orderStatus"}`);
     } catch (error) {
       setLoading(false);
       console.log(error, "Error");
     }
   };
+  console.log(orderData,"orderStatus111");
   return (
     <>
       <Modal
@@ -94,23 +96,17 @@ const ReceiveModals = ({ orderData, id, setOrderData , setLoading, ReceivingModa
                 <Form.Label>Confirm Serial Number</Form.Label>
                 <Form.Control
                   type="text"
-                  value={serialNumber}
-                  onChange={(e) => setSerialNumber(e.target.value)}
+                  value={orderData?.serialNumber}
+                  disabled
                 />
               </Form.Group>
               <Form.Group>
-                <Form.Label>Confirm Modal</Form.Label>
+                <Form.Label>Confirm Model</Form.Label>
                 <Form.Control
-                  as="select"
-                  value={modal}
-                  onChange={(e) => setModal(e.target.value)}
-                >
-                  {modals.map((name, index) => (
-                    <option value={name} key={index}>
-                      {name}
-                    </option>
-                  ))}
-                </Form.Control>
+                  type="text"
+                  value={orderData?.model}
+                  disabled
+                />
               </Form.Group>
             </Col>
           </Row>

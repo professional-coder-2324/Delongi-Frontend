@@ -86,7 +86,7 @@ const BoxShipmentModals = ({
             }
           ],
           "shipDatestamp": "2023-12-25",
-          "serviceType": "PRIORITY_OVERNIGHT",
+          "serviceType": "GROUND_HOME_DELIVERY",
           "packagingType": "FEDEX_ENVELOPE",
           "pickupType": "USE_SCHEDULED_PICKUP",
           "blockInsightVisibility": false,
@@ -192,6 +192,7 @@ const BoxShipmentModals = ({
      
       let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
       const encodedLabel = firstLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
+      console.log(firstLabel,"encodeddd");
 
       let secondLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, UserBody)
       const encodedLabel2 = secondLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
@@ -245,9 +246,11 @@ const BoxShipmentModals = ({
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateBoxshipment`,
         {
-          orderId: orderData._id,
+          orderId: orderData.id,
           status: status,
           shipperName: shipper,
+          outboundTrackingNo: firstLabel.data.data.output.transactionShipments[0].masterTrackingNumber,
+          receiveTrackingNo: secondLabel.data.data.output.transactionShipments[0].masterTrackingNumber
         },
         {
           headers: {
@@ -255,6 +258,8 @@ const BoxShipmentModals = ({
           },
         }
       );
+      setBoxShipmentModal(false)
+      window.location.reload()
     } catch (error) {
       setLoading(false);
       console.log(error, "Error");
