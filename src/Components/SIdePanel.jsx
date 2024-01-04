@@ -93,6 +93,8 @@ export const tabData = {
     repairs: true,
     machineShipments: true,
     machineShipped: true,
+    refurbished:true,
+    refurbishedList:true,
     trashed: true,
     partManagement: true,
     logs: true,
@@ -146,6 +148,8 @@ const tabDisplayNames = {
   people: "People",
   settings: "Settings",
   trashed: "Trashed",
+  refurbished:"Refurbished",
+  refurbishedList: "Refurbished List",
 };
 function Navbar({ user, isNavOpen, setIsNavOpen }) {
   const role = user.role.roleName;

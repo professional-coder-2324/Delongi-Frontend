@@ -36,7 +36,7 @@ const Repairs = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/getReceivedOrders`,
+          `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/${ location.pathname.includes("/refurbishedList")?"getRefurbishedOrders?status=refurbished" : "getReceivedOrders"}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -51,7 +51,7 @@ const Repairs = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [location.pathname]);
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -119,11 +119,11 @@ const Repairs = () => {
       const filtered = rows.filter((item) => {
         // Customize your filter criteria here
         return (
-          item.firstName.toLowerCase().includes(search.toLowerCase()) ||
-          item.lastName.toLowerCase().includes(search.toLowerCase()) ||
-          item.caseNumber.toLowerCase().includes(search.toLowerCase()) ||
-          item?.status.toLowerCase().includes(search.toLowerCase()) ||
-          item?.createdAt.toLowerCase().includes(search.toLowerCase())
+          item?.firstName?.toLowerCase().includes(search.toLowerCase()) ||
+          item?.lastName?.toLowerCase().includes(search.toLowerCase()) ||
+          item?.caseNumber?.toLowerCase().includes(search.toLowerCase()) ||
+          item?.status?.toLowerCase().includes(search.toLowerCase()) ||
+          item?.createdAt?.toLowerCase().includes(search.toLowerCase())
         );
       });
       setFilteredData(filtered);
@@ -151,26 +151,26 @@ const Repairs = () => {
         sort: "asc",
         width: 100,
       },
-      {
+      !location.pathname.includes("/refurbishedList") && {
         label: "First Name",
         field: "firstName",
         sort: "asc",
         width: 150,
       },
-      {
+      !location.pathname.includes("/refurbishedList") && {
         label: "Last Name",
         field: "lastName",
         sort: "asc",
         width: 270,
       },
-      location.pathname.includes("/repairs") && {
+      (location.pathname.includes("/repairs") || location.pathname.includes("/refurbishedList")) && {
         label: "Action",
         field: "process",
         sort: "none",
         width: 100,
         className: "process-column",
       },
-      {
+      (location.pathname.includes("/repairs") || location.pathname.includes("/receivingList")) && {
         label: "Details",
         field: "actions",
         sort: "none",
@@ -226,7 +226,7 @@ const Repairs = () => {
           </button>
         </div>
       ),
-      process:location.pathname.includes("/repairs") && (
+      process: (location.pathname.includes("/repairs") || location.pathname.includes("/refurbishedList"))&& (
         <div>
           {/* <button
             className="action-button"
@@ -257,7 +257,7 @@ const Repairs = () => {
               setOrderData(userData);
               setRepairs(true);
             }}
-            disabled={userData.status !== "received"}
+            disabled={userData.status !== "received" && userData.status !== "refurbished"}
           >
             <div className="button-container" style={{ fontSize: 12 }}>
               <span>Continue</span>
@@ -278,7 +278,7 @@ const Repairs = () => {
       {!loading && (
         <>
           <div>
-            <h2 className="pb-2 title-user">{location.pathname.includes("/repairs")? "Repairs": "Receiving List"}</h2>
+            <h2 className="pb-2 title-user">{location.pathname.includes("/repairs")? "Repairs": location.pathname.includes("/receivingList") ?"Receiving List" : "Refurbished List"}</h2>
             {/* ... Your search and filter buttons ... */}
             <div class="service-component">
               <div class="global-search mt-4 mb-3">

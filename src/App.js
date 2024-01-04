@@ -38,7 +38,7 @@ import TrashedOrders from "./Components/TrashedOrder";
 import MachineShipment from "./Components/MachineShipment";
 import MachineShipped from "./Components/MachineShipped";
 import Search from "./Components/Search";
-const isAuthenticated = !!localStorage.getItem("token");
+import Refurbished from "./Components/Refurbished";
 
 function App() {
   const [user, setUser] = useState({});
@@ -93,7 +93,9 @@ function App() {
       trashed: TrashedOrders,
       machineShipments: MachineShipment,
       machineShipped: MachineShipped,
-      search: Search
+      search: Search,
+      refurbished: Refurbished,
+      refurbishedList: Repairs,
       // Define other mappings as needed
     }[routeName];
   }

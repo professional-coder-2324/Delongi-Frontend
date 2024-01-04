@@ -14,6 +14,7 @@ const RepairModals = ({
   setStatus,
   parts
 }) => {
+  
   console.log(orderData, "orderrrr");
   const [Repair, setRepair] = useState(RepairModal);
   const [additionalRepair, setAdditionalRepair] = useState(false);
@@ -34,6 +35,7 @@ const RepairModals = ({
       setError("");
     }, 2000);
   }, [error]);
+
   const [formData, setFormData] = useState({
     noOfcoffee: null,
     noOfdescale: null,
@@ -831,7 +833,7 @@ const RepairModals = ({
                 onChange={(e) => setPartNo(e.target.value)}
               >
                 <option value="">Select Part No or Description</option>
-                {parts.map((data)=>
+                {parts?.map((data)=>
                 <option value={data.partNumber}>{
                   data.partNumber + " - " + data.description
                 }</option>

@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Form, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import PrinterUtil from "./PrinterUtil";
 
 const BoxShipmentModals = ({
   orderData,
@@ -44,6 +45,23 @@ const BoxShipmentModals = ({
   //       console.log(error, "Error");
   //     }
   //   };
+  // useEffect(() => {
+  //   // Initialize QZ Tray when the component mounts
+  //   PrinterUtil.initialize();
+
+  //   // Cleanup QZ Tray connection when the component unmounts
+  //   return () => {
+  //     PrinterUtil.terminate();
+  //   };
+  // }, []);
+
+  const handlePrint = (...encodedLabels) => {
+    const zplContent = '^XA^FO100,100^B3^FD>:123456^FS^XZ';
+    encodedLabels.forEach((encodedLabel) => {
+      const zplContent = '^XA^FO100,100^B3^FD>:123456^FS^XZ';
+      PrinterUtil.printZPL(encodedLabel);
+    });
+  };
   const handleStatusSubmit = async (status) => {
     setLoading(true);
     try {
@@ -103,7 +121,7 @@ const BoxShipmentModals = ({
           },
           "labelSpecification": {
             "imageType": "ZPLII",
-            "labelStockType": "PAPER_85X11_TOP_HALF_LABEL"
+            "labelStockType": "PAPER_4X8"
           },
           "requestedPackageLineItems": [
             {
@@ -174,7 +192,7 @@ const BoxShipmentModals = ({
           },
           "labelSpecification": {
             "imageType": "ZPLII",
-            "labelStockType": "PAPER_85X11_TOP_HALF_LABEL"
+            "labelStockType": "PAPER_4X6"
           },
           "requestedPackageLineItems": [
             {
@@ -191,11 +209,11 @@ const BoxShipmentModals = ({
       };
      
       let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
-      const encodedLabel = firstLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
+      const encodedLabel = firstLabel.data.data;
       console.log(firstLabel,"encodeddd");
 
       let secondLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, UserBody)
-      const encodedLabel2 = secondLabel.data.data.output.transactionShipments[0].pieceResponses[0].packageDocuments[0].encodedLabel;
+      const encodedLabel2 = secondLabel.data.data;
 
       // Create a new iframe
       const iframe = document.createElement('iframe');
@@ -258,6 +276,7 @@ const BoxShipmentModals = ({
           },
         }
       );
+      handlePrint(encodedLabel,encodedLabel2)
       setBoxShipmentModal(false)
       window.location.reload()
     } catch (error) {

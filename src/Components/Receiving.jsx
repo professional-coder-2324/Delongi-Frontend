@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { Form, Modal } from "react-bootstrap";
 import Barcode from "../Assets/barcode.png";
 import ReceiveModals from "./ReceiveModals";
+import OutOfWarranty from "./OutOfWarranty";
+import { useModal } from "./ModalContext";
 const Receiving = () => {
   console.log("calledddd");
   const [rows, setRows] = useState([]);
@@ -22,6 +24,7 @@ const Receiving = () => {
   const [orderData, setOrderData] = useState([])
   const [status, setStatus] = useState("")
   const [error, setError] = useState("");
+  const { openNewOrdersModal, showNewOrdersModal } = useModal();
   // const formatDate = (dateString) => {
   //   const options = { year: 'numeric', month: 'long', day: 'numeric' };
   //   const date = new Date(dateString);
@@ -339,7 +342,7 @@ const Receiving = () => {
                 <button
                   type="button"
                   className="mr-1 btn btn-icon m-1 btn-sm create-user-button"
-                  //   onClick={() => handleSubmit("unreleased")}
+                    onClick={() => openNewOrdersModal()}
                 >
                   <div className="button-container" style={{ fontSize: 12 }}>
                     <span>
@@ -350,6 +353,8 @@ const Receiving = () => {
               </div>
             </Modal.Footer>
           </Modal>
+          <OutOfWarranty orderData={orderData} key={showNewOrdersModal} />
+
           <Modal
             show={barcodeModal}
             onHide={() => setBarcodeModal(false)}

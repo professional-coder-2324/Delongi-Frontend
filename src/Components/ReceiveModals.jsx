@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
 import { Col, Form, Modal, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const ReceiveModals = ({ orderData, id, setOrderData , setLoading, ReceivingModal, setReceivingModal,setStatus}) => {
   console.log(ReceivingModal,"vdsfgsdjkgh");
   const [Receive, setReceive] = useState(ReceivingModal);
-
+  const navigate = useNavigate()
   const [BoxShipmenConfirmation, setBoxShipmenConfirmation] = useState(false);
   const [receiver, setReceiver] = useState("");
   const [serialNumber, setSerialNumber] = useState("");
@@ -38,7 +39,7 @@ const ReceiveModals = ({ orderData, id, setOrderData , setLoading, ReceivingModa
       );
       setOrderData(response.data.data);
       setLoading(false);
-      window.location.reload()
+      navigate("/receivingList")
       // navigate(`${path.length > 0 ? path : "/orderStatus"}`);
     } catch (error) {
       setLoading(false);
