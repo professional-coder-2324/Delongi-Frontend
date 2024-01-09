@@ -70,177 +70,75 @@ const BoxShipmentModals = ({
         "requestedShipment": {
             "shipper": {
                 "contact": {
-                    "personName": "James Weston",
-                    "phoneNumber": 9012633035,
-                    "companyName": "RTC"
+                    "personName": "August CSR 2022",
+                    "personName2": "TC018",
+                    "phoneNumber": 4122224444
                 },
                 "address": {
                     "streetLines": [
-                        "1751 THOMPSON ST"
+                        "100000 FedEx Gnd Drive fourth floor",
+                        "West Wing"
                     ],
-                    "city": "AURORA",
-                    "stateOrProvinceCode": "OH",
-                    "postalCode": 44202,
+                    "city": "Pittsburgh",
+                    "stateOrProvinceCode": "PA",
+                    "postalCode": 15108,
                     "countryCode": "US"
                 }
             },
             "recipients": [
                 {
                     "contact": {
-                        "personName": "1505",
-                        "phoneNumber": 9012633035,
-                        "companyName": "RTC TEST"
+                        "personName": "SHIP TO CONTACT ME WITH LG30",
+                        "phoneNumber": 4121234567,
+                        "companyName": "SHIP TO COMPANY ME WITH LG30"
                     },
                     "address": {
                         "streetLines": [
-                            " Recipient Address Line 1"
+                            "Ship To Street line 1",
+                            "Ship to Street line 2"
                         ],
-                        "city": "Toronto",
-                        "stateOrProvinceCode": "ON",
-                        "postalCode": "M4P1E4",
-                        "countryCode": "CA"
+                        "city": "Dartmouth",
+                        "stateOrProvinceCode": "MA",
+                        "postalCode": "02747",
+                        "countryCode": "US",
+                        "residential": true
                     }
                 }
             ],
-            "shipDatestamp": "2023-07-31",
+            "shipDatestamp": "2023-08-02",
             "serviceType": "FEDEX_GROUND",
             "packagingType": "YOUR_PACKAGING",
             "pickupType": "USE_SCHEDULED_PICKUP",
             "blockInsightVisibility": false,
-            "customsClearanceDetail": {
-                "dutiesPayment": {
-                    "payor": {
-                        "responsibleParty": {
-                            "address": {
-                                "streetLines": [],
-                                "city": "Beverly Hills",
-                                "stateOrProvinceCode": "CA",
-                                "postalCode": "38127",
-                                "countryCode": "US",
-                                "residential": false
-                            },
-                            "contact": {
-                                "personName": "John Taylor",
-                                "emailAddress": "test001@fedex.com",
-                                "parsedPersonName": {},
-                                "phoneNumber": "1234567890",
-                                "phoneExtension": "12",
-                                "companyName": "Fedex",
-                                "faxNumber": "fax number"
-                            },
-                            "accountNumber": {
-                                "value": "123456789"
-                            }
-                        }
-                    },
-                    "paymentType": "SENDER"
-                },
-                "isDocumentOnly": true,
-                "importerOfRecord": {
-                    "address": {
-                        "streetLines": [
-                            "10 FedEx Parkway",
-                            "Suite 302"
-                        ],
-                        "city": "Beverly Hills",
-                        "stateOrProvinceCode": "CA",
-                        "postalCode": "90210",
-                        "countryCode": "US",
-                        "residential": false
-                    },
-                    "contact": {
-                        "personName": "John Taylor",
-                        "emailAddress": "test001@fedex.com",
-                        "phoneExtension": "000",
-                        "phoneNumber": "XXXX345671",
-                        "companyName": "Fedex"
-                    },
-                    "accountNumber": {
-                        "value": 123456789
-                    }
-                },
-                "commodities": [
-                    {
-                        "description": "PACKAGE",
-                        "countryOfManufacture": "US",
-                        "quantity": 1,
-                        "quantityUnits": "PCS",
-                        "unitPrice": {
-                            "amount": 100,
-                            "currency": "USD"
-                        },
-                        "customsValue": {
-                            "amount": 100,
-                            "currency": "USD"
-                        },
-                        "weight": {
-                            "units": "LB",
-                            "value": 0.5
-                        },
-                        "customerReferenceType": "CUSTOMER_REFERENCE",
-                        "value": "CSP_TESTING",
-                        "b13AFilingOption": "NOT_REQUIRED",
-                        "exportComplianceStatement": "NO EEI 30.37(f)"
-                    }
-                ]
-            },
             "shippingChargesPayment": {
-                "paymentType": "SENDER",
-                "payor": {
-                    "responsibleParty": {
-                        "address": {
-                            "streetLines": [
-                                "10 FedEx Parkway",
-                                "Suite 302"
-                            ],
-                            "city": "Beverly Hills",
-                            "stateOrProvinceCode": "CA",
-                            "postalCode": "90210",
-                            "countryCode": "US",
-                            "residential": false
-                        },
-                        "contact": {
-                            "personName": "John Taylor",
-                            "emailAddress": "test001@fedex.com",
-                            "parsedPersonName": {
-                                "firstName": "first name",
-                                "lastName": "last name",
-                                "middleName": "middle name",
-                                "suffix": "suffix"
-                            },
-                            "phoneNumber": "1234567890",
-                            "phoneExtension": "phone ",
-                            "companyName": "Fedex",
-                            "faxNumber": "fax number"
-                        },
-                        "accountNumber": {
-                            "value": "123456789"
-                        }
-                    }
+                "paymentType": "SENDER"
+            },
+            "customsClearanceDetail": {
+                "totalCustomsValue": {
+                    "amount": "",
+                    "currency": "USD"
+                },
+                "commercialInvoice": {
+                    "specialInstructions": "GSNE",
+                    "shipmentPurpose": "SAMPLE"
                 }
             },
-            "rateRequestType": [
-                "LIST"
-            ],
             "labelSpecification": {
                 "imageType": "ZPLII",
                 "labelStockType": "STOCK_4X6"
             },
             "requestedPackageLineItems": [
                 {
-                    "insuredValue": {
-                        "Currency": "USD",
-                        "Amount": 250
+                    "packageSpecialServices": {
+                        "signatureOptionType": "INDIRECT",
+                        "specialServiceTypes": [
+                            "SIGNATURE_OPTION"
+                        ]
                     },
+                    "groupPackageCount": 1,
                     "weight": {
-                        "value": 30,
+                        "value": 75,
                         "units": "LB"
-                    },
-                    "dimensions": {
-                        "length": 12,
-                        "width": 12,
-                        "height": 12,
-                        "units": "IN"
                     }
                 }
             ]
