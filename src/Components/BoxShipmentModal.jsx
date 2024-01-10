@@ -216,200 +216,148 @@ const BoxShipmentModals = ({
       //     "value": "985798579857"
       //   }
       // };
+      // const CompanyBody = {
+      //   "labelResponseOptions": "URL_ONLY",
+      //   "requestedShipment": {
+      //     "shipper": {
+      //       "contact": {
+      //         "personName": "ABC 1",
+      //         "phoneNumber": 1234567890,
+      //         "companyName": "Shipper Company Name"
+      //       },
+      //       "address": {
+      //         "streetLines": [
+      //           "SHIPPER STREET LINE 1"
+      //         ],
+      //         "city": "HARRISON",
+      //         "stateOrProvinceCode": "AR",
+      //         "postalCode": 72601,
+      //         "countryCode": "US"
+      //       }
+      //     },
+      //     "recipients": [
+      //       {
+      //         "contact": {
+      //           "personName": "DEF 23",
+      //           "phoneNumber": 1234567890,
+      //           "companyName": "Recipient Company Name"
+      //         },
+      //         "address": {
+      //           "streetLines": [
+      //             "RECIPIENT STREET LINE 1",
+      //             "RECIPIENT STREET LINE 2"
+      //           ],
+      //           "city": "Collierville",
+      //           "stateOrProvinceCode": "TN",
+      //           "postalCode": 38017,
+      //           "countryCode": "US"
+      //         }
+      //       }
+      //     ],
+      //     "shipDatestamp": "2020-07-03",
+      //     "serviceType": "PRIORITY_OVERNIGHT",
+      //     "packagingType": "YOUR_PACKAGING",
+      //     "pickupType": "USE_SCHEDULED_PICKUP",
+      //     "blockInsightVisibility": false,
+      //     "shippingChargesPayment": {
+      //       "paymentType": "SENDER"
+      //     },
+      //     "shipmentSpecialServices": {
+      //       "specialServiceTypes": [
+      //         "RETURN_SHIPMENT"
+      //       ],
+      //       "returnShipmentDetail": {
+      //         "returnType": "PRINT_RETURN_LABEL"
+      //       }
+      //     },
+      //     "labelSpecification": {
+      //       "imageType": "ZPLII",
+      //       "labelStockType": "PAPER_4X6"
+      //     },
+      //     "requestedPackageLineItems": [
+      //       {
+      //         "weight": {
+      //           "value": 1,
+      //           "units": "LB"
+      //         }
+      //       }
+      //     ]
+      //   },
+      //   "accountNumber": {
+      //     "value": "1234556789"
+      //   }
+      // };
       const CompanyBody = {
-        "labelResponseOptions": "URL_ONLY",
+        "labelResponseOptions": "LABEL",
         "requestedShipment": {
-          "shipper": {
-            "contact": {
-              "personName": "ABC 1",
-              "phoneNumber": 1234567890,
-              "companyName": "Shipper Company Name"
+            "shipper": {
+                "contact": {
+                    "personName": "SHIPPER NAME",
+                    "phoneNumber": 1234567890,
+                    "companyName": "Shipper Company Name"
+                },
+                "address": {
+                    "streetLines": [
+                        "SHIPPER STREET LINE 1"
+                    ],
+                    "city": "HARRISON",
+                    "stateOrProvinceCode": "AR",
+                    "postalCode": 72601,
+                    "countryCode": "US"
+                }
             },
-            "address": {
-              "streetLines": [
-                "SHIPPER STREET LINE 1"
-              ],
-              "city": "HARRISON",
-              "stateOrProvinceCode": "AR",
-              "postalCode": 72601,
-              "countryCode": "US"
-            }
-          },
-          "recipients": [
-            {
-              "contact": {
-                "personName": "DEF 23",
-                "phoneNumber": 1234567890,
-                "companyName": "Recipient Company Name"
-              },
-              "address": {
-                "streetLines": [
-                  "RECIPIENT STREET LINE 1",
-                  "RECIPIENT STREET LINE 2"
-                ],
-                "city": "Collierville",
-                "stateOrProvinceCode": "TN",
-                "postalCode": 38017,
-                "countryCode": "US"
-              }
-            }
-          ],
-          "shipDatestamp": "2020-07-03",
-          "serviceType": "PRIORITY_OVERNIGHT",
-          "packagingType": "YOUR_PACKAGING",
-          "pickupType": "USE_SCHEDULED_PICKUP",
-          "blockInsightVisibility": false,
-          "shippingChargesPayment": {
-            "paymentType": "SENDER"
-          },
-          "shipmentSpecialServices": {
-            "specialServiceTypes": [
-              "RETURN_SHIPMENT"
+            "recipients": [
+                {
+                    "contact": {
+                        "personName": "RECIPIENT NAME",
+                        "phoneNumber": 1234567890,
+                        "companyName": "Recipient Company Name"
+                    },
+                    "address": {
+                        "streetLines": [
+                            "RECIPIENT STREET LINE 1",
+                            "RECIPIENT STREET LINE 2"
+                        ],
+                        "city": "Collierville",
+                        "stateOrProvinceCode": "TN",
+                        "postalCode": 38017,
+                        "countryCode": "US"
+                    }
+                }
             ],
-            "returnShipmentDetail": {
-              "returnType": "PRINT_RETURN_LABEL"
-            }
-          },
-          "labelSpecification": {
-            "imageType": "ZPLII",
-            "labelStockType": "PAPER_4X6"
-          },
-          "requestedPackageLineItems": [
-            {
-              "weight": {
-                "value": 1,
-                "units": "LB"
-              }
-            }
-          ]
+            "shipDatestamp": "2023-05-17",
+            "serviceType": "STANDARD_OVERNIGHT",
+            "packagingType": "FEDEX_PAK",
+            "pickupType": "USE_SCHEDULED_PICKUP",
+            "blockInsightVisibility": false,
+            "shippingChargesPayment": {
+                "paymentType": "SENDER"
+            },
+            "labelSpecification": {
+                "imageType": "ZPLII",
+                "labelStockType": "STOCK_4X6"
+            },
+            "requestedPackageLineItems": [
+                {
+                    "groupPackageCount": 1,
+                    "weight": {
+                        "value": 10,
+                        "units": "LB"
+                    }
+                },
+                {
+                    "groupPackageCount": 2,
+                    "weight": {
+                        "value": 5,
+                        "units": "LB"
+                    }
+                }
+            ]
         },
         "accountNumber": {
-          "value": "1234556789"
+            "value": 123456789
         }
-      };
-    //   const CompanyBody = {
-    //     "labelResponseOptions": "LABEL",
-    //     "requestedShipment": {
-    //         "shipper": {
-    //             "contact": {
-    //                 "personName": "SENDER NAME",
-    //                 "phoneNumber": "9018328595"
-    //             },
-    //             "address": {
-    //                 "city": "ROBERTSFORS",
-    //                 "stateOrProvinceCode": "",
-    //                 "postalCode": "8037",
-    //                 "countryCode": "CH",
-    //                 "residential": false,
-    //                 "streetLines": [
-    //                     "SENDER ADDRESS 1",
-    //                     "SENDER ADDRESS 2"
-    //                 ]
-    //             }
-    //         },
-    //         "recipients": [
-    //             {
-    //                 "contact": {
-    //                     "personName": "RECIPIENT NAME",
-    //                     "phoneNumber": "9018328595"
-    //                 },
-    //                 "address": {
-    //                     "city": "Bessemmer",
-    //                     "stateOrProvinceCode": "",
-    //                     "postalCode": "1217",
-    //                     "countryCode": "CH",
-    //                     "residential": false,
-    //                     "streetLines": [
-    //                         "RECIPIENT ADDRESS 1",
-    //                         "RECIPIENT ADDRESS 2"
-    //                     ]
-    //                 }
-    //             }
-    //         ],
-    //         "shipDatestamp": "2023-08-01",
-    //         "pickupType": "USE_SCHEDULED_PICKUP",
-    //         "serviceType": "PRIORITY_OVERNIGHT",
-    //         "packagingType": "YOUR_PACKAGING",
-    //         "shippingChargesPayment": {
-    //             "paymentType": "SENDER"
-    //         },
-    //         "customsClearanceDetail": {
-    //             "totalCustomsValue": {
-    //                 "amount": "500",
-    //                 "currency": "USD"
-    //             },
-    //             "dutiesPayment": {
-    //                 "paymentType": "SENDER"
-    //             },
-    //             "commodities": [
-    //                 {
-    //                     "description": "DSLR Camera",
-    //                     "countryOfManufacture": "US",
-    //                     "numberOfPieces": "1",
-    //                     "weight": {
-    //                         "value": "8",
-    //                         "units": "LB"
-    //                     },
-    //                     "quantity": "1",
-    //                     "quantityUnits": "PCS",
-    //                     "unitPrice": {
-    //                         "amount": "500",
-    //                         "currency": "USD"
-    //                     },
-    //                     "customsValue": {
-    //                         "amount": "500",
-    //                         "currency": "USD"
-    //                     }
-    //                 }
-    //             ]
-    //         },
-    //         "labelSpecification": {
-    //             "imageType": "ZPLII",
-    //             "labelStockType": "STOCK_4X6"
-    //         },
-    //         "shippingDocumentSpecification": {
-    //             "shippingDocumentTypes": [
-    //                 "COMMERCIAL_INVOICE"
-    //             ],
-    //             "commercialInvoiceDetail": {
-    //                 "documentFormat": {
-    //                     "docType": "PDF",
-    //                     "stockType": "PAPER_LETTER"
-    //                 }
-    //             }
-    //         },
-    //         "requestedPackageLineItems": [
-    //             {
-    //                 "groupPackageCount": 1,
-    //                 "declaredValue": {
-    //                     "currency": "USD",
-    //                     "amount": "500"
-    //                 },
-    //                 "weight": {
-    //                     "units": "LB",
-    //                     "value": "19"
-    //                 },
-    //                 "dimensions": {
-    //                     "length": "10",
-    //                     "width": "10",
-    //                     "height": "10",
-    //                     "units": "IN"
-    //                 },
-    //                 "packageSpecialServices": {
-    //                     "specialServiceTypes": [
-    //                         "NON_STANDARD_CONTAINER"
-    //                     ],
-    //                     "signatureOptionDetail": {
-    //                         "signatureOptionType": "DIRECT"
-    //                     }
-    //                 }
-    //             }
-    //         ]
-    //     },
-    //     "accountNumber": {
-    //         "value": 123456789
-    //     }
-    // };
+    };
       let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
       const encodedLabel = firstLabel.data.data;
       console.log(firstLabel,"encodeddd");
@@ -418,47 +366,47 @@ const BoxShipmentModals = ({
       const encodedLabel2 = secondLabel.data.data;
 
       // Create a new iframe
-      // const iframe = document.createElement('iframe');
-      // iframe.style.display = 'none';
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
 
       // // Set the content of the iframe to an HTML document with both image tags
-      // iframe.srcdoc = `
-      //   <html>
-      //     <head>
-      //       <style>
-      //         body {
-      //           margin: 0;
-      //           transform: rotate(0deg); /* Use 270deg for landscape orientation */
-      //           transform-origin: left top;
-      //         }
-      //         img {
-      //           width: 100%;
-      //           height: auto;
-      //           max-width: 100vw;
-      //           max-height: 90vh; /* Adjust this value as needed */
-      //         }
-      //       </style>
-      //     </head>
-      //     <body>
-      //       <img src="data:image/png;base64,${encodedLabel}" />
-      //       <img src="data:image/png;base64,${encodedLabel2}" />
-      //     </body>
-      //   </html>
-      // `;
+      iframe.srcdoc = `
+        <html>
+          <head>
+            <style>
+              body {
+                margin: 0;
+                transform: rotate(0deg); /* Use 270deg for landscape orientation */
+                transform-origin: left top;
+              }
+              img {
+                width: 100%;
+                height: auto;
+                max-width: 100vw;
+                max-height: 90vh; /* Adjust this value as needed */
+              }
+            </style>
+          </head>
+          <body>
+            <img src="data:image/png;base64,${encodedLabel}" />
+            <img src="data:image/png;base64,${encodedLabel2}" />
+          </body>
+        </html>
+      `;
 
-      // // Append the iframe to the body
-      // document.body.appendChild(iframe);
+      // Append the iframe to the body
+      document.body.appendChild(iframe);
 
-      // // Once the iframe is loaded, trigger the print dialog
-      // iframe.onload = function () {
-      //   iframe.contentWindow.print();
-      //     setLoading(false);
-      // };
+      // Once the iframe is loaded, trigger the print dialog
+      iframe.onload = function () {
+        iframe.contentWindow.print();
+          setLoading(false);
+      };
 
-      // // Optionally, remove the iframe after printing
-      // iframe.onafterprint = function () {
-      //   document.body.removeChild(iframe);
-      // };
+      // Optionally, remove the iframe after printing
+      iframe.onafterprint = function () {
+        document.body.removeChild(iframe);
+      };
 
 
 
@@ -478,7 +426,7 @@ const BoxShipmentModals = ({
           },
         }
       );
-      handlePrint(encodedLabel,encodedLabel2)
+      // handlePrint(encodedLabel,encodedLabel2)
       setBoxShipmentModal(false)
       window.location.reload()
     } catch (error) {
