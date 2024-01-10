@@ -41,7 +41,6 @@ const CreateUserModal = ({
     }
   }, [editData]);
   
-  console.log(username,"userrrr");
   // State variables to hold error messages
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");

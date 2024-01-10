@@ -4,7 +4,6 @@ import { Col, Form, Modal, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const ReceiveModals = ({ orderData, id, setOrderData , setLoading, ReceivingModal, setReceivingModal,setStatus}) => {
-  console.log(ReceivingModal,"vdsfgsdjkgh");
   const [Receive, setReceive] = useState(ReceivingModal);
   const navigate = useNavigate()
   const [BoxShipmenConfirmation, setBoxShipmenConfirmation] = useState(false);

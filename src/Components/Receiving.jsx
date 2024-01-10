@@ -121,8 +121,6 @@ const Receiving = () => {
    status == "done" && fetchData()
   }
   ,[status])
-
-  console.log(orderData, "eleejbedyhgbd");
   const userAttributes = [];
   filteredData.forEach((el) => {
     userAttributes.push({

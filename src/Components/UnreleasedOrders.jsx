@@ -49,7 +49,6 @@ const UnReleasedOrders = () => {
 
   const userAttributes = [];
   filteredData.forEach((el) => {
-    console.log(el, "eleejbedyhgbd");
     userAttributes.push({
       firstName: el.firstName,
       lastName: el.lastName,

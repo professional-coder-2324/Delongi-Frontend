@@ -46,7 +46,6 @@ function App() {
   const location = useLocation();
   const [isNavOpen, setIsNavOpen] = useState(true);
   const token = localStorage.getItem("token");
-  console.log(token, "dfdfdfdfdfdf");
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -71,7 +70,6 @@ function App() {
     token && fetchData();
   }, [token]);
   function getComponentForRoute(routeName) {
-    console.log(routeName, "fsdfhgdshf");
     // You can map route names to components here, e.g., by convention
     return {
       users: DatatablePage,
@@ -115,7 +113,6 @@ function App() {
 
     return [...routes, ...roleRoutes];
   }, []);
-  console.log(routeConfig, "userrrr");
   return (
     <>
       {user && user.role ? (

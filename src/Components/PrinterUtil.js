@@ -14,19 +14,16 @@ const PrinterUtil = {
       }
   },
 
-  printZPL: async (zplContent, scale = 1.5) => {
+  printZPL: async (zplContent) => {
     try {
       await qz.printers.find();
       const printer = qz.printers.getDefault();
-  
+
       if (printer) {
         await qz.print({
           printer,
           data: zplContent,
           type: 'RAW',
-          options: {
-            scale, // Define the scale here
-          },
         });
         console.log('ZPL II commands sent to the printer');
       } else {
@@ -36,7 +33,6 @@ const PrinterUtil = {
       console.error('Error printing ZPL:', err);
     }
   },
-  
 
   terminate: () => {
     qz.websocket.disconnect();
