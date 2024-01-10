@@ -45,15 +45,15 @@ const BoxShipmentModals = ({
   //       console.log(error, "Error");
   //     }
   //   };
-  useEffect(() => {
-    // Initialize QZ Tray when the component mounts
-    PrinterUtil.initialize();
+  // useEffect(() => {
+  //   // Initialize QZ Tray when the component mounts
+  //   PrinterUtil.initialize();
 
-    // Cleanup QZ Tray connection when the component unmounts
-    return () => {
-      PrinterUtil.terminate();
-    };
-  }, []);
+  //   // Cleanup QZ Tray connection when the component unmounts
+  //   return () => {
+  //     PrinterUtil.terminate();
+  //   };
+  // }, []);
 
   const handlePrint = (...encodedLabels) => {
     const zplContent = '^XA^FO100,100^B3^FD>:123456^FS^XZ';
@@ -69,80 +69,78 @@ const BoxShipmentModals = ({
         "labelResponseOptions": "LABEL",
         "requestedShipment": {
             "shipper": {
-                "contact": {
-                    "personName": "August CSR 2022",
-                    "personName2": "TC018",
-                    "phoneNumber": 4122224444
-                },
                 "address": {
                     "streetLines": [
-                        "100000 FedEx Gnd Drive fourth floor",
-                        "West Wing"
+                        "9522 E 30th St"
                     ],
-                    "city": "Pittsburgh",
-                    "stateOrProvinceCode": "PA",
-                    "postalCode": 15108,
+                    "city": "Indianapolis",
+                    "stateOrProvinceCode": "IN",
+                    "postalCode": "46229",
                     "countryCode": "US"
+                },
+                "contact": {
+                    "personName": "shipper personName",
+                    "phoneNumber": "1234567891",
+                    "companyName": "shipper companyName"
                 }
             },
             "recipients": [
                 {
-                    "contact": {
-                        "personName": "SHIP TO CONTACT ME WITH LG30",
-                        "phoneNumber": 4121234567,
-                        "companyName": "SHIP TO COMPANY ME WITH LG30"
-                    },
                     "address": {
                         "streetLines": [
-                            "Ship To Street line 1",
-                            "Ship to Street line 2"
+                            "1840 N Tamiami Trail",
+                            "L13"
                         ],
-                        "city": "Dartmouth",
-                        "stateOrProvinceCode": "MA",
-                        "postalCode": "02747",
-                        "countryCode": "US",
-                        "residential": true
+                        "city": "Naples",
+                        "stateOrProvinceCode": "FL",
+                        "postalCode": "34102",
+                        "countryCode": "US"
+                    },
+                    "contact": {
+                        "personName": null,
+                        "phoneNumber": "1234567891",
+                        "companyName": "recipients companyName"
                     }
                 }
             ],
-            "shipDatestamp": "2023-08-02",
+            "pickupType": "USE_SCHEDULED_PICKUP",
             "serviceType": "FEDEX_GROUND",
             "packagingType": "YOUR_PACKAGING",
-            "pickupType": "USE_SCHEDULED_PICKUP",
-            "blockInsightVisibility": false,
             "shippingChargesPayment": {
-                "paymentType": "SENDER"
-            },
-            "customsClearanceDetail": {
-                "totalCustomsValue": {
-                    "amount": "",
-                    "currency": "USD"
-                },
-                "commercialInvoice": {
-                    "specialInstructions": "GSNE",
-                    "shipmentPurpose": "SAMPLE"
+                "paymentType": "SENDER",
+                "payor": {
+                    "responsibleParty": {
+                        "accountNumber": {
+                            "value": "123456789"
+                        }
+                    }
                 }
             },
             "labelSpecification": {
-                "imageType": "ZPLII",
-                "labelStockType": "STOCK_4X6"
+                "labelStockType": "STOCK_4X6",
+                "imageType": "ZPLII"
             },
             "requestedPackageLineItems": [
                 {
-                    "packageSpecialServices": {
-                        "signatureOptionType": "INDIRECT",
-                        "specialServiceTypes": [
-                            "SIGNATURE_OPTION"
-                        ]
-                    },
-                    "groupPackageCount": 1,
+                    "sequenceNumber": "1",
+                    "customerReferences": [
+                        {
+                            "customerReferenceType": "CUSTOMER_REFERENCE",
+                            "value": "00000912017692725421"
+                        },
+                        {
+                            "customerReferenceType": "P_O_NUMBER",
+                            "value": "99110369"
+                        }
+                    ],
                     "weight": {
-                        "value": 75,
-                        "units": "LB"
+                        "units": "LB",
+                        "value": 24.023500000000002
                     }
                 }
             ]
         },
+        "mergeLabelDocOption": "LABELS_ONLY",
         "accountNumber": {
             "value": "123456789"
         }
@@ -218,200 +216,200 @@ const BoxShipmentModals = ({
       //     "value": "985798579857"
       //   }
       // };
-      // const CompanyBody = {
-      //   "labelResponseOptions": "URL_ONLY",
-      //   "requestedShipment": {
-      //     "shipper": {
-      //       "contact": {
-      //         "personName": "ABC 1",
-      //         "phoneNumber": 1234567890,
-      //         "companyName": "Shipper Company Name"
-      //       },
-      //       "address": {
-      //         "streetLines": [
-      //           "SHIPPER STREET LINE 1"
-      //         ],
-      //         "city": "HARRISON",
-      //         "stateOrProvinceCode": "AR",
-      //         "postalCode": 72601,
-      //         "countryCode": "US"
-      //       }
-      //     },
-      //     "recipients": [
-      //       {
-      //         "contact": {
-      //           "personName": "DEF 23",
-      //           "phoneNumber": 1234567890,
-      //           "companyName": "Recipient Company Name"
-      //         },
-      //         "address": {
-      //           "streetLines": [
-      //             "RECIPIENT STREET LINE 1",
-      //             "RECIPIENT STREET LINE 2"
-      //           ],
-      //           "city": "Collierville",
-      //           "stateOrProvinceCode": "TN",
-      //           "postalCode": 38017,
-      //           "countryCode": "US"
-      //         }
-      //       }
-      //     ],
-      //     "shipDatestamp": "2020-07-03",
-      //     "serviceType": "PRIORITY_OVERNIGHT",
-      //     "packagingType": "FEDEX_ENVELOPE",
-      //     "pickupType": "USE_SCHEDULED_PICKUP",
-      //     "blockInsightVisibility": false,
-      //     "shippingChargesPayment": {
-      //       "paymentType": "SENDER"
-      //     },
-      //     "shipmentSpecialServices": {
-      //       "specialServiceTypes": [
-      //         "RETURN_SHIPMENT"
-      //       ],
-      //       "returnShipmentDetail": {
-      //         "returnType": "PRINT_RETURN_LABEL"
-      //       }
-      //     },
-      //     "labelSpecification": {
-      //       "imageType": "ZPLII",
-      //       "labelStockType": "PAPER_4X6"
-      //     },
-      //     "requestedPackageLineItems": [
-      //       {
-      //         "weight": {
-      //           "value": 1,
-      //           "units": "LB"
-      //         }
-      //       }
-      //     ]
-      //   },
-      //   "accountNumber": {
-      //     "value": "1234556789"
-      //   }
-      // };
       const CompanyBody = {
-        "labelResponseOptions": "LABEL",
+        "labelResponseOptions": "URL_ONLY",
         "requestedShipment": {
-            "shipper": {
-                "contact": {
-                    "personName": "SENDER NAME",
-                    "phoneNumber": "9018328595"
-                },
-                "address": {
-                    "city": "ROBERTSFORS",
-                    "stateOrProvinceCode": "",
-                    "postalCode": "8037",
-                    "countryCode": "CH",
-                    "residential": false,
-                    "streetLines": [
-                        "SENDER ADDRESS 1",
-                        "SENDER ADDRESS 2"
-                    ]
-                }
+          "shipper": {
+            "contact": {
+              "personName": "ABC 1",
+              "phoneNumber": 1234567890,
+              "companyName": "Shipper Company Name"
             },
-            "recipients": [
-                {
-                    "contact": {
-                        "personName": "RECIPIENT NAME",
-                        "phoneNumber": "9018328595"
-                    },
-                    "address": {
-                        "city": "Bessemmer",
-                        "stateOrProvinceCode": "",
-                        "postalCode": "1217",
-                        "countryCode": "CH",
-                        "residential": false,
-                        "streetLines": [
-                            "RECIPIENT ADDRESS 1",
-                            "RECIPIENT ADDRESS 2"
-                        ]
-                    }
-                }
-            ],
-            "shipDatestamp": "2023-08-01",
-            "pickupType": "USE_SCHEDULED_PICKUP",
-            "serviceType": "PRIORITY_OVERNIGHT",
-            "packagingType": "YOUR_PACKAGING",
-            "shippingChargesPayment": {
-                "paymentType": "SENDER"
-            },
-            "customsClearanceDetail": {
-                "totalCustomsValue": {
-                    "amount": "500",
-                    "currency": "USD"
-                },
-                "dutiesPayment": {
-                    "paymentType": "SENDER"
-                },
-                "commodities": [
-                    {
-                        "description": "DSLR Camera",
-                        "countryOfManufacture": "US",
-                        "numberOfPieces": "1",
-                        "weight": {
-                            "value": "8",
-                            "units": "LB"
-                        },
-                        "quantity": "1",
-                        "quantityUnits": "PCS",
-                        "unitPrice": {
-                            "amount": "500",
-                            "currency": "USD"
-                        },
-                        "customsValue": {
-                            "amount": "500",
-                            "currency": "USD"
-                        }
-                    }
-                ]
-            },
-            "labelSpecification": {
-                "imageType": "ZPLII",
-                "labelStockType": "STOCK_4X6"
-            },
-            "shippingDocumentSpecification": {
-                "shippingDocumentTypes": [
-                    "COMMERCIAL_INVOICE"
+            "address": {
+              "streetLines": [
+                "SHIPPER STREET LINE 1"
+              ],
+              "city": "HARRISON",
+              "stateOrProvinceCode": "AR",
+              "postalCode": 72601,
+              "countryCode": "US"
+            }
+          },
+          "recipients": [
+            {
+              "contact": {
+                "personName": "DEF 23",
+                "phoneNumber": 1234567890,
+                "companyName": "Recipient Company Name"
+              },
+              "address": {
+                "streetLines": [
+                  "RECIPIENT STREET LINE 1",
+                  "RECIPIENT STREET LINE 2"
                 ],
-                "commercialInvoiceDetail": {
-                    "documentFormat": {
-                        "docType": "PDF",
-                        "stockType": "PAPER_LETTER"
-                    }
-                }
-            },
-            "requestedPackageLineItems": [
-                {
-                    "groupPackageCount": 1,
-                    "declaredValue": {
-                        "currency": "USD",
-                        "amount": "500"
-                    },
-                    "weight": {
-                        "units": "LB",
-                        "value": "19"
-                    },
-                    "dimensions": {
-                        "length": "10",
-                        "width": "10",
-                        "height": "10",
-                        "units": "IN"
-                    },
-                    "packageSpecialServices": {
-                        "specialServiceTypes": [
-                            "NON_STANDARD_CONTAINER"
-                        ],
-                        "signatureOptionDetail": {
-                            "signatureOptionType": "DIRECT"
-                        }
-                    }
-                }
-            ]
+                "city": "Collierville",
+                "stateOrProvinceCode": "TN",
+                "postalCode": 38017,
+                "countryCode": "US"
+              }
+            }
+          ],
+          "shipDatestamp": "2020-07-03",
+          "serviceType": "PRIORITY_OVERNIGHT",
+          "packagingType": "YOUR_PACKAGING",
+          "pickupType": "USE_SCHEDULED_PICKUP",
+          "blockInsightVisibility": false,
+          "shippingChargesPayment": {
+            "paymentType": "SENDER"
+          },
+          "shipmentSpecialServices": {
+            "specialServiceTypes": [
+              "RETURN_SHIPMENT"
+            ],
+            "returnShipmentDetail": {
+              "returnType": "PRINT_RETURN_LABEL"
+            }
+          },
+          "labelSpecification": {
+            "imageType": "ZPLII",
+            "labelStockType": "PAPER_4X6"
+          },
+          "requestedPackageLineItems": [
+            {
+              "weight": {
+                "value": 1,
+                "units": "LB"
+              }
+            }
+          ]
         },
         "accountNumber": {
-            "value": 123456789
+          "value": "1234556789"
         }
-    };
+      };
+    //   const CompanyBody = {
+    //     "labelResponseOptions": "LABEL",
+    //     "requestedShipment": {
+    //         "shipper": {
+    //             "contact": {
+    //                 "personName": "SENDER NAME",
+    //                 "phoneNumber": "9018328595"
+    //             },
+    //             "address": {
+    //                 "city": "ROBERTSFORS",
+    //                 "stateOrProvinceCode": "",
+    //                 "postalCode": "8037",
+    //                 "countryCode": "CH",
+    //                 "residential": false,
+    //                 "streetLines": [
+    //                     "SENDER ADDRESS 1",
+    //                     "SENDER ADDRESS 2"
+    //                 ]
+    //             }
+    //         },
+    //         "recipients": [
+    //             {
+    //                 "contact": {
+    //                     "personName": "RECIPIENT NAME",
+    //                     "phoneNumber": "9018328595"
+    //                 },
+    //                 "address": {
+    //                     "city": "Bessemmer",
+    //                     "stateOrProvinceCode": "",
+    //                     "postalCode": "1217",
+    //                     "countryCode": "CH",
+    //                     "residential": false,
+    //                     "streetLines": [
+    //                         "RECIPIENT ADDRESS 1",
+    //                         "RECIPIENT ADDRESS 2"
+    //                     ]
+    //                 }
+    //             }
+    //         ],
+    //         "shipDatestamp": "2023-08-01",
+    //         "pickupType": "USE_SCHEDULED_PICKUP",
+    //         "serviceType": "PRIORITY_OVERNIGHT",
+    //         "packagingType": "YOUR_PACKAGING",
+    //         "shippingChargesPayment": {
+    //             "paymentType": "SENDER"
+    //         },
+    //         "customsClearanceDetail": {
+    //             "totalCustomsValue": {
+    //                 "amount": "500",
+    //                 "currency": "USD"
+    //             },
+    //             "dutiesPayment": {
+    //                 "paymentType": "SENDER"
+    //             },
+    //             "commodities": [
+    //                 {
+    //                     "description": "DSLR Camera",
+    //                     "countryOfManufacture": "US",
+    //                     "numberOfPieces": "1",
+    //                     "weight": {
+    //                         "value": "8",
+    //                         "units": "LB"
+    //                     },
+    //                     "quantity": "1",
+    //                     "quantityUnits": "PCS",
+    //                     "unitPrice": {
+    //                         "amount": "500",
+    //                         "currency": "USD"
+    //                     },
+    //                     "customsValue": {
+    //                         "amount": "500",
+    //                         "currency": "USD"
+    //                     }
+    //                 }
+    //             ]
+    //         },
+    //         "labelSpecification": {
+    //             "imageType": "ZPLII",
+    //             "labelStockType": "STOCK_4X6"
+    //         },
+    //         "shippingDocumentSpecification": {
+    //             "shippingDocumentTypes": [
+    //                 "COMMERCIAL_INVOICE"
+    //             ],
+    //             "commercialInvoiceDetail": {
+    //                 "documentFormat": {
+    //                     "docType": "PDF",
+    //                     "stockType": "PAPER_LETTER"
+    //                 }
+    //             }
+    //         },
+    //         "requestedPackageLineItems": [
+    //             {
+    //                 "groupPackageCount": 1,
+    //                 "declaredValue": {
+    //                     "currency": "USD",
+    //                     "amount": "500"
+    //                 },
+    //                 "weight": {
+    //                     "units": "LB",
+    //                     "value": "19"
+    //                 },
+    //                 "dimensions": {
+    //                     "length": "10",
+    //                     "width": "10",
+    //                     "height": "10",
+    //                     "units": "IN"
+    //                 },
+    //                 "packageSpecialServices": {
+    //                     "specialServiceTypes": [
+    //                         "NON_STANDARD_CONTAINER"
+    //                     ],
+    //                     "signatureOptionDetail": {
+    //                         "signatureOptionType": "DIRECT"
+    //                     }
+    //                 }
+    //             }
+    //         ]
+    //     },
+    //     "accountNumber": {
+    //         "value": 123456789
+    //     }
+    // };
       let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
       const encodedLabel = firstLabel.data.data;
       console.log(firstLabel,"encodeddd");
