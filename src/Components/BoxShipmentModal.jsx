@@ -50,9 +50,9 @@ const BoxShipmentModals = ({
     PrinterUtil.initialize();
 
     // Cleanup QZ Tray connection when the component unmounts
-    return () => {
-      PrinterUtil.terminate();
-    };
+    // return () => {
+    //   PrinterUtil.terminate();
+    // };
   }, []);
   // function printZpl(zpl) {
   //   console.log("Starting print process..."); // Log start of print process
@@ -66,7 +66,6 @@ const BoxShipmentModals = ({
   //   console.log("Print process completed."); // Log end of print process
   //  }
   const handlePrint = (...encodedLabels) => {
-    console.log(encodedLabels,"encodedLabels");
     encodedLabels.forEach((encodedLabel) => {
       PrinterUtil.printZPL(encodedLabel);
     });
@@ -374,7 +373,6 @@ const BoxShipmentModals = ({
       const encodedLabel2 = secondLabel.data.data;
       
       
-      console.log(encodedLabel,encodedLabel2,"encodeddd");
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/api/callcenter/updateBoxshipment`,
         {
