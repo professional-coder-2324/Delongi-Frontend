@@ -65,10 +65,14 @@ const BoxShipmentModals = ({
   //   printWindow.close();
   //   console.log("Print process completed."); // Log end of print process
   //  }
-  const handlePrint = (...encodedLabels) => {
-    encodedLabels.forEach((encodedLabel) => {
-      PrinterUtil.printZPL(encodedLabel);
-    });
+  const handlePrint = async (...encodedLabels) => {
+    try {
+      for (const encodedLabel of encodedLabels) {
+        await PrinterUtil.printZPL(encodedLabel);
+      }
+    } catch (error) {
+      console.error('Error printing labels:', error);
+    }
   };
   const handleStatusSubmit = async (status) => {
     setLoading(true);
@@ -342,21 +346,14 @@ const BoxShipmentModals = ({
                 "paymentType": "SENDER"
             },
             "labelSpecification": {
-                "imageType": "ZPLII",
-                "labelStockType": "STOCK_4X6"
+              "labelStockType": "STOCK_4X6",
+                "imageType": "ZPLII"
             },
             "requestedPackageLineItems": [
                 {
                     "groupPackageCount": 1,
                     "weight": {
                         "value": 10,
-                        "units": "LB"
-                    }
-                },
-                {
-                    "groupPackageCount": 2,
-                    "weight": {
-                        "value": 5,
                         "units": "LB"
                     }
                 }
@@ -387,10 +384,10 @@ const BoxShipmentModals = ({
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
-      );
-      handlePrint(encodedLabel,encodedLabel2)
-      setBoxShipmentModal(false)
-      window.location.reload()
+        );
+        handlePrint(encodedLabel,encodedLabel2)
+        setLoading(false);
+        setBoxShipmentModal(false)
     } catch (error) {
       setLoading(false);
       console.log(error, "Error");

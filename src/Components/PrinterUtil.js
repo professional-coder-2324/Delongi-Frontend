@@ -14,14 +14,14 @@ const PrinterUtil = {
     try {
       console.log(zplContent, "ZPL")
       await qz.printers.find();
-      const printer = qz.printers.getDefault();
-      console.log(printer, "Printer")
+      const printer = await qz.printers.getDefault();
       if (printer) {
-        await qz.print({
-          printer,
-          data: zplContent,
-          type: 'RAW',
-        });
+        let config = qz.configs.create(printer)
+        console.log(printer, "Printer")
+       let data = await qz.print(
+          config,
+          [zplContent]
+        );
         console.log('ZPL II commands sent to the printer');
       } else {
         console.error('No default printer found');

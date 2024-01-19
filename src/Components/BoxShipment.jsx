@@ -188,11 +188,11 @@ const BoxShipments = () => {
   };
   return (
     <>
-      {loading && (
+      {/* {loading && (
         <div className="spinner-container-component">
           <div className="spinner-component"></div>
         </div>
-      )}
+      )} */}
       {!loading &&
         
           <>
