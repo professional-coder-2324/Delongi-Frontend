@@ -416,8 +416,8 @@ const BoxShipmentModals = ({
             "value": 123456789
         }
     };
-      let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
-      const encodedLabel = firstLabel.data.data;
+      // let firstLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, CompanyBody)
+      // const encodedLabel = firstLabel.data.data;
       
       let secondLabel = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/fedex/shipment`, UserBody)
       const encodedLabel2 = secondLabel.data.data;
@@ -429,7 +429,7 @@ const BoxShipmentModals = ({
           orderId: orderData.id,
           status: status,
           shipperName: shipper,
-          outboundTrackingNo: firstLabel.data.trackingNumber,
+          outboundTrackingNo: secondLabel.data.trackingNumber,
           receiveTrackingNo: secondLabel.data.trackingNumber
         },
         {
@@ -438,7 +438,7 @@ const BoxShipmentModals = ({
           },
         }
         );
-        handlePrint(encodedLabel,encodedLabel2)
+        handlePrint(encodedLabel2)
         setLoading(false);
         setBoxShipmentModal(false)
     } catch (error) {
