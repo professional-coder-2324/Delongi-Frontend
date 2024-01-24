@@ -304,57 +304,110 @@ const BoxShipmentModals = ({
         "requestedShipment": {
             "shipper": {
                 "contact": {
-                    "personName": "SHIPPER NAME",
-                    "phoneNumber": 1234567890,
-                    "companyName": "Shipper Company Name"
+                    "personName": "SENDER NAME",
+                    "phoneNumber": "9018328595"
                 },
                 "address": {
+                    "city": "TORONTO",
+                    "stateOrProvinceCode": "ON",
+                    "postalCode": "m1m1m1",
+                    "countryCode": "CA",
+                    "residential": false,
                     "streetLines": [
-                        "SHIPPER STREET LINE 1"
-                    ],
-                    "city": "HARRISON",
-                    "stateOrProvinceCode": "AR",
-                    "postalCode": 72601,
-                    "countryCode": "US"
+                        "SENDER ADDRESS 1",
+                        "SENDER ADDRESS 2"
+                    ]
                 }
             },
             "recipients": [
                 {
                     "contact": {
                         "personName": "RECIPIENT NAME",
-                        "phoneNumber": 1234567890,
-                        "companyName": "Recipient Company Name"
+                        "phoneNumber": "9018328595"
                     },
                     "address": {
-                        "streetLines": [
-                            "RECIPIENT STREET LINE 1",
-                            "RECIPIENT STREET LINE 2"
-                        ],
-                        "city": "Collierville",
+                        "city": "MEMPHIS",
                         "stateOrProvinceCode": "TN",
-                        "postalCode": 38017,
-                        "countryCode": "US"
+                        "postalCode": "38116",
+                        "countryCode": "US",
+                        "residential": false,
+                        "streetLines": [
+                            "RECIPIENT ADDRESS 1",
+                            "RECIPIENT ADDRESS 2"
+                        ]
                     }
                 }
             ],
-            "shipDatestamp": "2023-05-17",
+            "shipDatestamp": "2023-08-03",
+            "pickupType": "DROPOFF_AT_FEDEX_LOCATION",
             "serviceType": "STANDARD_OVERNIGHT",
-            "packagingType": "FEDEX_PAK",
-            "pickupType": "USE_SCHEDULED_PICKUP",
+            "packagingType": "YOUR_PACKAGING",
             "blockInsightVisibility": false,
             "shippingChargesPayment": {
                 "paymentType": "SENDER"
             },
+            "customsClearanceDetail": {
+                "totalCustomsValue": {
+                    "amount": "500",
+                    "currency": "USD"
+                },
+                "isDocumentOnly": "false",
+                "dutiesPayment": {
+                    "paymentType": "SENDER"
+                },
+                "commodities": [
+                    {
+                        "description": "DSLR Camera",
+                        "countryOfManufacture": "US",
+                        "numberOfPieces": "1",
+                        "weight": {
+                            "value": "20",
+                            "units": "LB"
+                        },
+                        "quantity": "1",
+                        "quantityUnits": "PCS",
+                        "unitPrice": {
+                            "amount": "500",
+                            "currency": "USD"
+                        },
+                        "customsValue": {
+                            "amount": "500",
+                            "currency": "USD"
+                        }
+                    }
+                ]
+            },
             "labelSpecification": {
-              "labelStockType": "STOCK_4X6",
-                "imageType": "ZPLII"
+                "imageType": "ZPLII",
+                "labelStockType": "STOCK_4X6"
+            },
+            "shippingDocumentSpecification": {
+                "shippingDocumentTypes": [
+                    "COMMERCIAL_INVOICE"
+                ],
+                "commercialInvoiceDetail": {
+                    "documentFormat": {
+                        "docType": "PDF",
+                        "stockType": "PAPER_LETTER"
+                    }
+                }
             },
             "requestedPackageLineItems": [
                 {
-                    "groupPackageCount": 1,
+                    "customerReferences": [
+                        {
+                            "customerReferenceType": "CUSTOMER_REFERENCE",
+                            "value": "Order 1 box 1"
+                        }
+                    ],
+                    "groupPackageCount": "1",
                     "weight": {
-                        "value": 10,
-                        "units": "LB"
+                        "units": "LB",
+                        "value": "25"
+                    },
+                    "declaredValue": {
+                        "amount": "500",
+                        "currency": "USD"
                     }
                 }
             ]
